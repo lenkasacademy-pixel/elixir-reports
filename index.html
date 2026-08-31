@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Elixir Creative Ledger</title>
+<!-- Standalone snapshot: Meta Ads figures frozen 31 Aug 2026. No live connection. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<style>
+:root{
+  color-scheme: light;
+  --plane:#eef3f0; --surface:#ffffff; --surface-2:#f6faf8; --sunk:#e8efeb;
+  --ink:#0d1712; --ink-2:#4d5b54; --ink-3:#87948c;
+  --hair:#dce5e0; --rule:#c3cfc9;
+  --brand:#0b4f35; --brand-ink:#ffffff; --brand-soft:#e2eee8;
+  --accent:#12885e;
+  --good:#0f7a4f; --good-bg:#e2f1e9;
+  --warn:#8a5b00; --warn-bg:#f7ecd6;
+  --crit:#a8291f; --crit-bg:#f7e2e0;
+  --idle:#6a7873; --idle-bg:#e9eeeb;
+  --shadow:0 1px 2px rgba(13,23,18,.05), 0 10px 30px -22px rgba(13,23,18,.5);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --plane:#080c0a; --surface:#111815; --surface-2:#161e1a; --sunk:#0d1310;
+    --ink:#eef4f0; --ink-2:#a1afa8; --ink-3:#75837c;
+    --hair:#1f2823; --rule:#313a35;
+    --brand:#7fe3b0; --brand-ink:#06130d; --brand-soft:#13251d;
+    --accent:#5fd3a0;
+    --good:#59d59b; --good-bg:#122a20;
+    --warn:#e0ab48; --warn-bg:#2a2213;
+    --crit:#ee7f72; --crit-bg:#2d1815;
+    --idle:#7e8c85; --idle-bg:#1a211d;
+    --shadow:0 1px 2px rgba(0,0,0,.5), 0 10px 30px -22px rgba(0,0,0,1);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --plane:#080c0a; --surface:#111815; --surface-2:#161e1a; --sunk:#0d1310;
+  --ink:#eef4f0; --ink-2:#a1afa8; --ink-3:#75837c;
+  --hair:#1f2823; --rule:#313a35;
+  --brand:#7fe3b0; --brand-ink:#06130d; --brand-soft:#13251d;
+  --accent:#5fd3a0;
+  --good:#59d59b; --good-bg:#122a20;
+  --warn:#e0ab48; --warn-bg:#2a2213;
+  --crit:#ee7f72; --crit-bg:#2d1815;
+  --idle:#7e8c85; --idle-bg:#1a211d;
+  --shadow:0 1px 2px rgba(0,0,0,.5), 0 10px 30px -22px rgba(0,0,0,1);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--plane); color:var(--ink);
+  font:400 15px/1.5 "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.mono{font-family:"IBM Plex Mono", ui-monospace, monospace; font-variant-numeric:tabular-nums}
+.wrap{max-width:1200px; margin:0 auto; padding:34px 22px 90px}
+
+/* ---------- masthead ---------- */
+.mast{display:flex; flex-wrap:wrap; gap:18px 26px; align-items:flex-end; justify-content:space-between;
+      padding-bottom:18px; border-bottom:2px solid var(--rule)}
+.eyebrow{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3)}
+h1{font-family:"Instrument Serif", Georgia, serif; font-weight:400; font-size:44px; line-height:1.02; margin:6px 0 0; letter-spacing:-.01em; text-wrap:balance}
+h1 em{font-style:italic; color:var(--accent)}
+.mast-r{display:flex; flex-direction:column; align-items:flex-end; gap:10px}
+.ranges{display:flex; gap:0; border:1px solid var(--rule); border-radius:8px; overflow:hidden; background:var(--surface)}
+.ranges button{
+  font:500 12.5px/1 "IBM Plex Sans",sans-serif; color:var(--ink-2); background:none; border:0;
+  border-right:1px solid var(--hair); padding:9px 13px; cursor:pointer;
+}
+.ranges button:last-child{border-right:0}
+.ranges button:hover{background:var(--surface-2); color:var(--ink)}
+.ranges button[aria-pressed="true"]{background:var(--brand); color:var(--brand-ink)}
+.stamp{display:flex; align-items:center; gap:9px; font-size:12px; color:var(--ink-3)}
+.stamp .dot{width:6px;height:6px;border-radius:50%;background:var(--good)}
+.stamp .dot.stale{background:var(--warn)}
+.stamp .dot.off{background:var(--ink-3)}
+.refresh{font:500 12px "IBM Plex Sans",sans-serif; color:var(--ink-2); background:var(--surface); border:1px solid var(--rule);
+         border-radius:7px; padding:5px 10px; cursor:pointer}
+.refresh:hover{border-color:var(--accent); color:var(--accent)}
+.refresh[disabled]{opacity:.5; cursor:default}
+
+/* ---------- money band ---------- */
+.band{margin:24px 0 0; background:var(--surface); border:1px solid var(--hair); border-radius:14px; box-shadow:var(--shadow); overflow:hidden}
+.band-top{display:grid; grid-template-columns:1.25fr 1fr 1fr; gap:1px; background:var(--hair)}
+.band-top > div{background:var(--surface); padding:20px 22px}
+.band-top .invoice{background:var(--brand); color:var(--brand-ink)}
+.k{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--ink-3)}
+.invoice .k{color:var(--brand-ink); opacity:.72}
+.v{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; font-weight:500; font-size:27px; margin-top:5px; letter-spacing:-.02em}
+.invoice .v{font-size:34px; font-weight:600}
+.v small{font-size:13px; font-weight:400; color:var(--ink-3); margin-left:6px; letter-spacing:0}
+.invoice .v small{color:var(--brand-ink); opacity:.7}
+.band-btm{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--hair)}
+.band-btm > div{background:var(--surface-2); padding:14px 22px}
+.band-btm .v{font-size:19px}
+
+/* ---------- latest day ---------- */
+.latest{margin-top:22px}
+.sec-h{display:flex; align-items:baseline; gap:12px; margin:0 0 12px}
+.sec-h h2{font-family:"Instrument Serif",Georgia,serif; font-weight:400; font-size:24px; margin:0; letter-spacing:-.01em}
+.sec-h .note{font-size:12.5px; color:var(--ink-3)}
+.daycards{display:grid; grid-template-columns:repeat(auto-fit,minmax(268px,1fr)); gap:12px}
+.daycard{background:var(--surface); border:1px solid var(--hair); border-left:3px solid var(--accent); border-radius:11px; padding:14px 16px}
+.daycard .nm{font-weight:600; font-size:14px; margin-bottom:10px; display:flex; justify-content:space-between; gap:10px; align-items:center}
+.daycard .row{display:grid; grid-template-columns:repeat(4,1fr); gap:8px}
+.daycard .row .v{font-size:15px}
+
+/* ---------- layout ---------- */
+.cols{display:grid; grid-template-columns:246px minmax(0,1fr); gap:26px; margin-top:34px; align-items:start}
+.rail{position:sticky; top:18px; display:flex; flex-direction:column; gap:3px}
+.rail-h{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--ink-3); padding:0 0 8px 2px}
+.tab{
+  display:block; width:100%; text-align:left; background:none; border:0; border-radius:9px;
+  padding:9px 11px; cursor:pointer; color:var(--ink-2); font:inherit; border-left:3px solid transparent;
+}
+.tab:hover{background:var(--surface-2); color:var(--ink)}
+.tab[aria-pressed="true"]{background:var(--surface); border-left-color:var(--brand); color:var(--ink); box-shadow:var(--shadow)}
+.tab .t{font-size:13.5px; font-weight:500; display:block; line-height:1.3}
+.tab .s{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-3); display:flex; gap:7px; align-items:center; margin-top:3px}
+.bar{height:3px; border-radius:2px; background:var(--sunk); margin-top:7px; overflow:hidden}
+.bar i{display:block; height:100%; background:var(--brand); border-radius:2px}
+
+.sheet{min-width:0; display:flex; flex-direction:column; gap:26px}
+.card{background:var(--surface); border:1px solid var(--hair); border-radius:14px; box-shadow:var(--shadow); overflow:hidden}
+.card-h{display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; justify-content:space-between; padding:16px 20px 12px; border-bottom:1px solid var(--hair)}
+.card-h h3{font-family:"Instrument Serif",Georgia,serif; font-weight:400; font-size:21px; margin:0; letter-spacing:-.01em}
+.card-h .note{font-size:12px; color:var(--ink-3)}
+.strip{display:flex; flex-wrap:wrap; gap:2px; background:var(--hair); border-bottom:1px solid var(--hair)}
+.strip > div{flex:1 1 118px; background:var(--surface-2); padding:11px 20px}
+.strip .v{font-size:16px}
+.foot{padding:11px 20px; font-size:12px; color:var(--ink-3); border-top:1px solid var(--hair); background:var(--surface-2)}
+
+/* ---------- tables ---------- */
+.scroll{overflow-x:auto; -webkit-overflow-scrolling:touch}
+table{width:100%; border-collapse:collapse; font-size:13.5px; min-width:640px}
+th,td{padding:9px 14px; text-align:right; white-space:nowrap; border-bottom:1px solid var(--hair)}
+th:first-child, td:first-child{text-align:left; white-space:normal; min-width:190px}
+thead th{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.09em; text-transform:uppercase;
+  color:var(--ink-3); font-weight:500; background:var(--surface-2); position:sticky; top:0; z-index:1;
+}
+table.sortable thead th{cursor:pointer; user-select:none}
+table.sortable thead th:hover{color:var(--accent)}
+table.sortable thead th[aria-sort="descending"]::after{content:" ↓"; color:var(--accent)}
+table.sortable thead th[aria-sort="ascending"]::after{content:" ↑"; color:var(--accent)}
+tbody tr:hover td{background:var(--surface-2)}
+tbody tr:last-child td{border-bottom:0}
+td.num{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums}
+tr.tot td{border-top:2px solid var(--rule); font-weight:600; background:var(--surface-2)}
+tr.dead td{color:var(--ink-3)}
+td .sub{display:block; font-size:11.5px; color:var(--ink-3); font-weight:400}
+
+.pill{display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.07em; text-transform:uppercase;
+      padding:2.5px 7px; border-radius:5px; font-weight:500; white-space:nowrap}
+.pill.live{background:var(--good-bg); color:var(--good)}
+.pill.off{background:var(--idle-bg); color:var(--idle)}
+.pill.iss{background:var(--warn-bg); color:var(--warn)}
+.pill.bad{background:var(--crit-bg); color:var(--crit)}
+
+/* ---------- states ---------- */
+.state{padding:22px 20px; display:flex; flex-direction:column; gap:5px}
+.state .h{font-weight:600; font-size:14px}
+.state .h.err{color:var(--crit)}
+.state .h.wait{color:var(--ink-3)}
+.state .p{font-size:13px; color:var(--ink-2); max-width:62ch}
+.skel{height:11px; border-radius:4px; background:var(--sunk); animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+@media (prefers-reduced-motion: reduce){.skel{animation:none}}
+
+footer{margin-top:44px; padding-top:16px; border-top:1px solid var(--hair); font-size:12px; color:var(--ink-3); display:flex; flex-wrap:wrap; gap:6px 18px; justify-content:space-between}
+
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:5px}
+
+@media print{
+  body{background:#fff}
+  .wrap{max-width:none; padding:0}
+  .rail, .tab{display:none}
+  .cols{display:block}
+  .card, .band, .daycard{box-shadow:none; break-inside:avoid}
+  table{min-width:0; font-size:10.5pt}
+}
+
+@media (max-width:900px){
+  .wrap{padding:22px 14px 70px}
+  h1{font-size:32px}
+  .band-top{grid-template-columns:1fr}
+  .band-btm{grid-template-columns:repeat(2,1fr)}
+  .cols{grid-template-columns:1fr; gap:18px}
+  .rail{position:static; flex-direction:row; overflow-x:auto; gap:8px; padding-bottom:6px}
+  .rail-h{display:none}
+  .tab{width:auto; min-width:172px; flex:0 0 auto; border:1px solid var(--hair); border-left-width:3px}
+  .mast-r{align-items:flex-start; width:100%}
+}
+</style>
+
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="mast">
+    <div>
+      <div class="eyebrow">Elixir Social &middot; Meta Ads &middot; acct 1358051173168970</div>
+      <h1>Creative <em>Ledger</em></h1>
+    </div>
+    <div class="mast-r">
+      <div class="ranges" id="scope" role="group" aria-label="Which campaigns"></div>
+      <div class="stamp"><span class="dot"></span><span>Lifetime to 31 Aug 2026 &middot; figures frozen at this snapshot</span></div>
+    </div>
+  </header>
+
+  <section class="band" id="band" aria-label="Spend and results"></section>
+
+  <section class="latest" id="latest" hidden></section>
+
+  <div class="cols">
+    <nav class="rail" id="rail" aria-label="Campaigns"><div class="rail-h">Campaigns</div></nav>
+    <div class="sheet" id="sheet"></div>
+  </div>
+
+  <footer>
+    <span>Meta Ads, account 1358051173168970 &mdash; lifetime figures as at 31 August 2026. Reach is de-duplicated by Meta and never adds up across days, campaigns or age bands, so totals leave it blank on purpose.</span>
+    <span>GST shown at 18% of media spend.</span>
+  </footer>
+</div>
+
+<script type="module">
+/* ============================================================
+   Snapshot data — pulled from Meta Ads on 31 Aug 2026
+   Account 1358051173168970. Nothing here calls out to the network.
+   ============================================================ */
+const GST = 0.18;
+const SNAP_DAY = "2026-08-31";
+const state = { tab:"all", activeOnly:true, picked:false, data:{}, errs:{} };
+const CID = ["120249010423390482","120248552059290482","120248779042430482","120249146323630482","120249010386050482","120249183882130482","120248544185220482","120249090597080482"];
+const CAMP  = [[0,"India | MBBS Students | ios","PAUSED",23042.48,235066,71921,1714,0.73,98.03,429,183],[1,"India | MBBS Students | App Downloads | Playstore","PAUSED",15335.76,614494,391839,18927,3.08,24.96,910,314],[2,"India | Doctors| App Downloads | Playstore – Copy","PAUSED",10648.88,314987,154560,4622,1.47,33.81,598,151],[3,"India | MBBS Students | App Downloads | Playstore","PAUSED",7089.11,160139,93717,1024,0.64,44.27,526,146],[4,"India | Doctors| App Downloads | App store","PAUSED",7014.39,62239,25766,647,1.04,112.7,127,79],[5,"India | MBBS Students | App Downloads | signups","ACTIVE",5296.59,148737,97594,980,0.66,35.61,388,137],[6,"India | MBBS Students | App Downloads | ios","PAUSED",1331.18,84411,64838,418,0.5,15.77,null,null],[7,"India | App Downloads | Playstore | v2","PAUSED",398.77,7466,6557,71,0.95,53.41,1,1]];
+const ADS   = [["Test 4",0,"CAMPAIGN_PAUSED",23042.48,235066,71921,1714,0.73,98.03,1527,429,183],["v1",1,"CAMPAIGN_PAUSED",13698.31,430493,245898,16344,3.8,31.82,16605,905,312],["Medical AI for Physicians",2,"CAMPAIGN_PAUSED",8839.91,272911,143356,4115,1.51,32.39,4161,527,128],["v3",3,"CAMPAIGN_PAUSED",4248.86,86866,56474,638,0.73,48.91,569,353,98],["v4",5,"ACTIVE",4155.68,124550,86855,800,0.64,33.37,627,302,105],["v2",4,"CAMPAIGN_PAUSED",3887.06,35114,17800,224,0.64,110.7,161,50,31],["v1",4,"CAMPAIGN_PAUSED",3127.33,27125,13761,423,1.56,115.29,369,77,48],["v2",3,"CAMPAIGN_PAUSED",2833.05,72946,50221,382,0.52,38.84,344,173,48],["creative4",2,"CAMPAIGN_PAUSED",1516.51,35797,22024,440,1.23,42.36,417,63,21],["Test 3",6,"CAMPAIGN_PAUSED",893.88,54956,44481,276,0.5,16.27,264,null,null],["v2",5,"ACTIVE",794.3,17235,13606,129,0.75,46.09,104,64,22],["v3",1,"PAUSED",593.01,36885,33115,415,1.13,16.08,428,5,2],["Test 3",1,"PAUSED",474.44,71868,71083,518,0.72,6.6,521,null,null],["Test - 2",6,"CAMPAIGN_PAUSED",415.29,28764,24301,137,0.48,14.44,131,null,null],["v3",5,"ACTIVE",322.84,6324,5333,44,0.7,51.05,33,20,10],["v2",1,"CAMPAIGN_PAUSED",263.62,35980,31139,1114,3.1,7.33,1156,null,null],["WhatsApp Image 2026-08-03 at 07.25.53.jpeg",7,"CAMPAIGN_PAUSED",208.87,3185,2782,40,1.26,65.58,34,1,1],["creative 2",2,"CAMPAIGN_PAUSED",203.01,4203,3720,40,0.95,48.3,40,3,1],["v1",7,"CAMPAIGN_PAUSED",179.02,4118,3661,30,0.73,43.47,25,null,null],["Test 4",1,"PAUSED",158.5,29990,27426,473,1.58,5.29,495,null,null],["Test - 2",1,"PAUSED",74.19,4517,4168,27,0.6,16.42,28,null,null],["Test 5",1,"PAUSED",70.86,3342,3136,31,0.93,21.2,33,null,null],["creative5",2,"CAMPAIGN_PAUSED",68.56,1695,1485,16,0.94,40.45,12,4,null],["creative3",2,"CAMPAIGN_PAUSED",20.89,381,353,11,2.89,54.83,10,1,1],["v1",5,"ACTIVE",16.21,411,383,2,0.49,39.44,1,1,null],["Test 4",6,"CAMPAIGN_PAUSED",13.01,475,454,4,0.84,27.39,4,null,null],["2. 1x1.png",7,"CAMPAIGN_PAUSED",8.98,135,131,1,0.74,66.52,null,null,null],["Creative 1",6,"CAMPAIGN_PAUSED",8.3,189,182,1,0.53,43.92,1,null,null],["v1",3,"CAMPAIGN_PAUSED",7.2,327,316,4,1.22,22.02,4,null,null],["v4",5,"ACTIVE",4.59,135,105,3,2.22,34.0,2,1,null],["v5",5,"ACTIVE",2.97,82,63,2,2.44,36.22,null,null,null],["Creative 1",1,"PAUSED",2.83,1419,1394,5,0.35,1.99,4,null,null],["v2",7,"CAMPAIGN_PAUSED",1.9,28,28,0,0.0,67.86,null,null,null],["Test 5",6,"ADSET_PAUSED",0.32,8,7,0,0.0,40.0,null,null,null],["Test 3",6,"ADSET_PAUSED",0.28,8,6,0,0.0,35.0,null,null,null],["Test - 2",6,"ADSET_PAUSED",0.07,7,6,0,0.0,10.0,null,null,null],["Test 5",6,"CAMPAIGN_PAUSED",0.03,4,4,0,0.0,7.5,null,null,null],["Test 3",5,"PAUSED",0,0,0,0,null,null,null,null,null],["Test - 2",5,"PAUSED",0,0,0,0,null,null,null,null,null],["Test 4",6,"ADSET_PAUSED",0,0,0,0,null,null,null,null,null],["Creative 1",6,"ADSET_PAUSED",0,0,0,0,null,null,null,null,null]];
+const DAILY = [["07-31",6,15.36,480,461,3,0.63,32.0,null,null],["07-31",1,165.46,3943,3699,65,1.65,41.96,null,null],["08-01",6,1057.28,74676,59675,373,0.5,14.16,null,null],["08-01",1,515.16,91734,86807,841,0.92,5.62,null,null],["08-02",6,122.05,4518,4080,19,0.42,27.01,null,null],["08-02",1,40.37,10727,10075,100,0.93,3.76,null,null],["08-03",6,136.49,4737,4232,23,0.49,28.81,null,null],["08-03",1,157.72,15817,14933,264,1.67,9.97,null,null],["08-04",1,724.08,85511,69450,7907,9.25,8.47,null,null],["08-05",1,868.14,79132,68174,6447,8.15,10.97,19,3],["08-06",1,1578.6,7165,6211,417,5.82,220.32,50,10],["08-07",1,1407.69,17660,12754,340,1.93,79.71,120,40],["08-07",2,595.69,11169,9178,212,1.9,53.33,40,9],["08-08",1,749.07,14703,11557,236,1.61,50.95,93,34],["08-08",2,881.17,20555,15607,342,1.66,42.87,75,29],["08-09",1,1270.85,30091,22618,346,1.15,42.23,122,46],["08-09",2,1249.95,38251,28738,637,1.67,32.68,109,25],["08-10",1,688.23,17469,14958,143,0.82,39.4,48,23],["08-10",2,522.4,16891,14687,245,1.45,30.93,48,11],["08-11",1,807.92,25789,20852,224,0.87,31.33,72,30],["08-11",2,784.01,29550,24616,484,1.64,26.53,46,11],["08-12",1,1347.1,46304,37615,366,0.79,29.09,131,34],["08-12",2,1736.16,63594,50172,891,1.4,27.3,78,12],["08-13",1,1686.14,52542,40313,415,0.79,32.09,138,53],["08-13",2,1402.45,39475,30561,604,1.53,35.53,83,21],["08-14",1,1241.65,42555,33366,314,0.74,29.18,96,33],["08-14",2,1508.95,42056,31470,534,1.27,35.88,102,29],["08-15",1,1193.81,37279,30401,324,0.87,32.02,15,7],["08-15",2,1003.66,27954,20879,384,1.37,35.9,13,3],["08-16",1,208.34,7518,6527,51,0.68,27.71,3,null],["08-16",2,200.89,5022,4255,59,1.17,40.0,4,1],["08-17",1,61.49,1675,1582,13,0.78,36.71,1,null],["08-17",2,34.94,653,603,8,1.23,53.51,null,null],["08-17",4,622.3,4660,3197,106,2.27,133.54,28,21],["08-17",0,818.95,6172,4179,71,1.15,132.69,27,9],["08-18",4,850.01,6248,4251,83,1.33,136.05,12,8],["08-18",0,845.62,7564,5319,74,0.98,111.8,36,20],["08-19",4,731.83,6362,4737,104,1.63,115.03,15,13],["08-19",0,732.14,7412,5704,72,0.97,98.78,30,15],["08-20",1,623.94,26880,23829,114,0.42,23.21,2,1],["08-20",2,728.61,19817,17509,222,1.12,36.77,null,null],["08-20",4,680.26,7518,5982,101,1.34,90.48,17,5],["08-20",0,1785.43,21155,14771,131,0.62,84.4,29,14],["08-21",4,443.66,4290,3416,44,1.03,103.42,5,1],["08-21",0,1713.19,15020,11442,128,0.85,114.06,40,17],["08-21",7,398.77,7466,6557,71,0.95,53.41,1,1],["08-22",4,1215.37,13304,9471,72,0.54,91.35,16,9],["08-22",0,1870.73,19717,14110,142,0.72,94.88,30,11],["08-23",4,805.44,7294,5567,44,0.6,110.43,12,7],["08-23",0,2174.19,22643,16156,137,0.61,96.02,34,15],["08-24",4,829.2,6037,4528,47,0.78,137.35,11,9],["08-24",0,1685.37,18379,13615,126,0.69,91.7,15,8],["08-25",4,645.19,5154,4130,38,0.74,125.18,10,6],["08-25",0,1565.88,15083,11900,118,0.78,103.82,24,14],["08-25",3,0.52,15,14,0,0.0,34.67,null,null],["08-26",4,191.13,1372,1273,8,0.58,139.31,1,null],["08-26",0,2431.42,22424,16209,192,0.86,108.43,45,18],["08-26",3,1818.8,47240,38317,271,0.57,38.5,119,37],["08-27",0,2208.95,21435,16536,154,0.72,103.05,38,16],["08-27",3,1593.24,32227,24805,237,0.74,49.44,130,41],["08-27",5,26.45,681,656,5,0.73,38.84,1,null],["08-28",0,1741.52,17467,13255,122,0.7,99.7,32,11],["08-28",3,1048.03,24921,20255,146,0.59,42.05,78,20],["08-28",5,566.52,11080,9282,66,0.6,51.13,35,14],["08-29",0,2191.83,27384,20968,158,0.58,80.04,27,9],["08-29",3,1270.16,26246,21066,168,0.64,48.39,86,15],["08-29",5,464.58,10733,9252,94,0.88,43.29,38,13],["08-30",0,1277.26,13211,10844,89,0.67,96.68,22,6],["08-30",3,1358.36,29490,22502,202,0.68,46.06,110,32],["08-30",5,1782.72,55606,40041,382,0.69,32.06,134,46],["08-31",3,0.0,0,0,0,null,null,3,1],["08-31",5,2456.32,70637,57189,433,0.61,34.77,180,64]];
+const AGE   = [["25-34",6,723.94,62475,47531,267,0.43,11.59,null,null],["35-44",6,235.48,11549,9164,65,0.56,20.39,null,null],["45-54",6,119.63,4943,4014,31,0.63,24.2,null,null],["55-64",6,127.67,2914,2276,21,0.72,43.81,null,null],["65+",6,124.46,2530,1947,34,1.34,49.19,null,null],["25-34",1,5252.91,287098,181430,8891,3.1,18.3,294,113],["35-44",1,4010.78,166213,112673,4901,2.95,24.13,249,83],["45-54",1,2606.05,90823,57474,2425,2.67,28.69,160,58],["55-64",1,1795.93,44063,30018,1576,3.58,40.76,104,34],["65+",1,1670.09,26297,16436,1134,4.31,63.51,101,26],["Unknown",1,0,0,0,0,null,null,2,null],["18-24",2,837.03,44250,21672,479,1.08,18.92,46,10],["25-34",2,2065.07,76237,42335,827,1.08,27.09,99,35],["35-44",2,2219.29,61420,31964,779,1.27,36.13,112,32],["45-54",2,1932.52,51026,24560,790,1.55,37.87,118,28],["55-64",2,1699.26,44215,21840,774,1.75,38.43,109,27],["65+",2,1895.71,37839,17521,973,2.57,50.1,110,19],["Unknown",2,0,0,0,0,null,null,4,null],["25-34",4,2708.56,37308,15175,275,0.74,72.6,53,35],["35-44",4,1287.42,11088,4487,129,1.16,116.11,25,16],["45-54",4,843.12,5092,2239,73,1.43,165.58,10,6],["55-64",4,953.59,4310,1842,68,1.58,221.25,8,7],["65+",4,1221.7,4441,1845,102,2.3,275.1,30,15],["Unknown",4,0,0,0,0,null,null,1,null],["25-34",0,8243.73,127062,36479,682,0.54,64.88,171,72],["35-44",0,4391.78,43422,13689,339,0.78,101.14,69,36],["45-54",0,3405.87,26395,9617,205,0.78,129.03,45,19],["55-64",0,3291.29,20754,7091,207,1.0,158.59,54,23],["65+",0,3709.81,17433,5973,281,1.61,212.8,86,32],["Unknown",0,0,0,0,0,null,null,4,1],["25-34",7,185.41,4958,4347,37,0.75,37.4,1,1],["35-44",7,99.25,1252,1096,16,1.28,79.27,null,null],["45-54",7,50.44,673,556,7,1.04,74.95,null,null],["55-64",7,41.37,337,272,5,1.48,122.76,null,null],["65+",7,22.3,246,197,6,2.44,90.65,null,null],["25-34",3,1855.53,64087,40513,316,0.49,28.95,157,47],["35-44",3,1704.85,37965,22702,263,0.69,44.91,129,37],["45-54",3,1494.36,28199,15591,182,0.65,52.99,87,29],["55-64",3,1058.65,17257,9609,138,0.8,61.35,74,20],["65+",3,975.72,12631,6839,125,0.99,77.25,76,13],["Unknown",3,0,0,0,0,null,null,3,null],["25-34",5,2937.72,102366,65186,590,0.58,28.7,228,85],["35-44",5,1241.54,26041,17242,219,0.84,47.68,86,27],["45-54",5,576.92,11557,7585,95,0.82,49.92,34,11],["55-64",5,308.88,5150,3370,44,0.85,59.98,23,7],["65+",5,231.53,3623,2346,32,0.88,63.91,16,4],["Unknown",5,0,0,0,0,null,null,1,3]];
+const YEAR  = "2026-";
+const hCamp  = r => ({ id:CID[r[0]], name:r[1], effective_status:r[2], amount_spent:r[3], impressions:r[4],
+                       reach:r[5], clicks:r[6], ctr:r[7], cpm:r[8], mobile_app_install:r[9], omni_complete_registration:r[10] });
+const hAd    = r => ({ id:r[1]+"|"+r[0], name:r[0], campaign_id:CID[r[1]], effective_status:r[2], amount_spent:r[3],
+                       impressions:r[4], reach:r[5], clicks:r[6], ctr:r[7], cpm:r[8], link_click:r[9],
+                       mobile_app_install:r[10], omni_complete_registration:r[11] });
+const hDay   = r => ({ date_start:YEAR+r[0], id:CID[r[1]], name:CAMP[r[1]][1], amount_spent:r[2], impressions:r[3], reach:r[4],
+                       clicks:r[5], ctr:r[6], cpm:r[7], mobile_app_install:r[8], omni_complete_registration:r[9] });
+const hAge   = r => ({ age:r[0], id:CID[r[1]], amount_spent:r[2], impressions:r[3], reach:r[4], clicks:r[5],
+                       ctr:r[6], cpm:r[7], mobile_app_install:r[8], omni_complete_registration:r[9] });
+
+/* ============================================================
+   Formatting
+   ============================================================ */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+const num = v => {
+  if (v == null) return null;
+  if (typeof v === "number") return Number.isFinite(v) ? v : null;
+  const n = parseFloat(String(v).replace(/,/g, "").replace(/[^0-9.\-]/g, ""));
+  return Number.isFinite(n) ? n : null;
+};
+const n0 = v => num(v) ?? 0;
+const inr  = n => n == null ? "—" : "₹" + Math.round(n).toLocaleString("en-IN");
+const inr2 = n => n == null ? "—" : "₹" + n.toLocaleString("en-IN",{minimumFractionDigits:2, maximumFractionDigits:2});
+const int  = n => n == null ? "—" : Math.round(n).toLocaleString("en-IN");
+const pct  = n => n == null ? "—" : n.toFixed(2) + "%";
+const per  = (spend, count) => count ? inr2(spend / count) : "—";
+const dayLabel = iso => {
+  const [y,m,d] = String(iso).split("-").map(Number);
+  return new Date(Date.UTC(y, m-1, d)).toLocaleDateString("en-GB",{ day:"numeric", month:"short", timeZone:"UTC" });
+};
+const ago = ts => {
+  const s = Math.max(0, Math.round((Date.now() - ts)/1000));
+  if (s < 90) return "just now";
+  if (s < 5400) return Math.round(s/60) + " min ago";
+  return Math.round(s/3600) + " h ago";
+};
+
+/* Campaign names arrive as "India | MBBS Students | App Downloads | Playstore" */
+function shortName(name){
+  const parts = String(name).split("|").map(s => s.trim()).filter(Boolean)
+    .filter(p => !/^india$/i.test(p) && !/^app downloads$/i.test(p));
+  const s = parts.join(" · ");
+  return s || String(name);
+}
+const STATUS = {
+  ACTIVE:["live","Active"], PAUSED:["off","Paused"], CAMPAIGN_PAUSED:["off","Campaign paused"],
+  ADSET_PAUSED:["off","Ad set paused"], ARCHIVED:["off","Archived"], DELETED:["off","Deleted"],
+  WITH_ISSUES:["iss","With issues"], PENDING_REVIEW:["iss","In review"], IN_PROCESS:["iss","In process"],
+  DISAPPROVED:["bad","Disapproved"], PENDING_BILLING_INFO:["bad","Billing needed"]
+};
+const pill = st => {
+  const [cls, label] = STATUS[st] || ["off", String(st || "—").replace(/_/g," ").toLowerCase()];
+  return `<span class="pill ${cls}">${esc(label)}</span>`;
+};
+
+/* ============================================================
+   Rows
+   ============================================================ */
+const rowsOf = k => (state.data[k] && state.data[k].rows) || null;
+
+function normalise(r){
+  return {
+    id: r.id, name: r.name, campaign_id: r.campaign_id, creative_id: r.creative_id,
+    status: r.effective_status, objective: r.objective, age: r.age, date: r.date_start,
+    spend: n0(r.amount_spent), impressions: n0(r.impressions), reach: n0(r.reach),
+    clicks: n0(r.clicks), linkClicks: num(r.link_click), ctr: num(r.ctr), cpm: num(r.cpm),
+    cpc: num(r.cpc), freq: num(r.frequency),
+    installs: n0(r.mobile_app_install), regs: n0(r.omni_complete_registration),
+    delivered: n0(r.impressions) > 0
+  };
+}
+const campaigns = () => (rowsOf("campaigns") || []).map(normalise);
+const isLive = c => c.status === "ACTIVE";
+
+/* Two campaigns can carry the same name - disambiguate by id tail. */
+function labelled(list){
+  const seen = {};
+  list.forEach(c => { const s = shortName(c.name); seen[s] = (seen[s] || 0) + 1; });
+  return list.map(c => {
+    const s = shortName(c.name);
+    return Object.assign(c, { label: seen[s] > 1 ? s + " · #" + String(c.id).slice(-8, -4) : s });
+  });
+}
+const sum = (list, f) => list.reduce((a,r) => a + (f(r) || 0), 0);
+
+/* One list feeds the band, the rail and every table. Default: what is running. */
+const allCampaigns = () => labelled(campaigns());
+function visible(){
+  const all = allCampaigns();
+  return state.activeOnly ? all.filter(isLive) : all;
+}
+const visibleIds = () => new Set(visible().map(c => c.id));
+function autoTab(){
+  const list = visible();
+  if (!state.picked && state.activeOnly && list.length === 1){ state.tab = list[0].id; return; }
+  if (state.tab !== "all" && !allCampaigns().some(c => c.id === state.tab)) state.tab = "all";
+}
+
+/* ============================================================
+   Render - masthead, band, latest day
+   ============================================================ */
+function renderScope(){
+  const live = allCampaigns().filter(isLive).length;
+  $("#scope").innerHTML = [[true, "Active only (" + live + ")"], [false, "All campaigns"]]
+    .map(([v,l]) => `<button type="button" data-scope="${v}" aria-pressed="${state.activeOnly === v}">${esc(l)}</button>`).join("");
+}
+
+function renderBand(){
+  const host = $("#band");
+  const list = visible();
+  if (!list.length){
+    host.innerHTML = state.activeOnly
+      ? `<div class="state"><div class="h">Nothing is running right now</div><div class="p">No campaign in this account is set to Active. <button class="refresh" data-scope="false">Show all campaigns</button></div></div>`
+      : `<div class="state"><div class="p">No campaigns delivered in this range.</div></div>`;
+    return;
+  }
+
+  const spend = sum(list, r => r.spend), inst = sum(list, r => r.installs), reg = sum(list, r => r.regs);
+  const gst = spend * GST, live = list.filter(isLive).length;
+
+  host.innerHTML = `
+    <div class="band-top">
+      <div class="invoice">
+        <div class="k">Billed — media + GST · Lifetime${state.activeOnly ? " · active only" : ""}</div>
+        <div class="v">${esc(inr2(spend + gst))}</div>
+      </div>
+      <div><div class="k">Media spend</div><div class="v">${esc(inr2(spend))}</div></div>
+      <div><div class="k">GST @ 18%</div><div class="v">${esc(inr2(gst))}</div></div>
+    </div>
+    <div class="band-btm">
+      <div><div class="k">Installs</div><div class="v">${esc(int(inst))}<small>${esc(per(spend, inst))} each</small></div></div>
+      <div><div class="k">Registrations</div><div class="v">${esc(int(reg))}<small>${esc(per(spend, reg))} each</small></div></div>
+      <div><div class="k">Install → registration</div><div class="v">${inst ? esc((reg/inst*100).toFixed(0)) + "%" : "—"}</div></div>
+      <div><div class="k">${state.activeOnly ? "Active campaigns" : "Campaigns"}</div><div class="v">${esc(int(list.length))}<small>${state.activeOnly ? "paused hidden" : live + " active"}</small></div></div>
+    </div>`;
+}
+
+function renderLatest(){
+  const host = $("#latest"), rows = rowsOf("daily");
+  if (!rows){ host.hidden = true; return; }
+  const days = rows.map(normalise).filter(r => r.date);
+  if (!days.length){ host.hidden = true; return; }
+  const last = days.map(r => r.date).sort().at(-1);
+  const keep = visibleIds();
+  const onLast = days.filter(r => r.date === last && r.spend > 0 && keep.has(r.id));
+  if (!onLast.length){ host.hidden = true; return; }
+  const named = labelled(onLast.map(r => Object.assign({}, r)));
+
+  host.hidden = false;
+  host.innerHTML = `
+    <div class="sec-h"><h2>${last === SNAP_DAY ? "Today so far" : "Latest day"} — ${esc(dayLabel(last))}</h2>
+      <span class="note">${last === SNAP_DAY ? "a part-day: Meta had not closed 31 Aug when this was taken" : "the last day in this report"}</span></div>
+    <div class="daycards">${named.sort((a,b) => b.spend - a.spend).map(c => `
+      <div class="daycard">
+        <div class="nm"><span>${esc(c.label)}</span><span class="k">${esc(inr2(c.spend))}</span></div>
+        <div class="row">
+          <div><div class="k">Installs</div><div class="v mono">${esc(int(c.installs))}</div></div>
+          <div><div class="k">Cost/inst.</div><div class="v mono">${esc(per(c.spend, c.installs))}</div></div>
+          <div><div class="k">Regs</div><div class="v mono">${esc(int(c.regs))}</div></div>
+          <div><div class="k">Cost/reg.</div><div class="v mono">${esc(per(c.spend, c.regs))}</div></div>
+        </div>
+      </div>`).join("")}</div>`;
+}
+
+/* ============================================================
+   Render - campaign rail
+   ============================================================ */
+function renderRail(){
+  const rail = $("#rail");
+  const list = rowsOf("campaigns") ? visible() : [];
+  const top = Math.max(1, ...list.map(c => c.spend));
+  const all = `<button type="button" class="tab" data-tab="all" aria-pressed="${state.tab === "all"}">
+      <span class="t">${state.activeOnly ? "All active" : "All campaigns"}</span>
+      <span class="s">${list.length ? esc(int(list.length)) + (list.length === 1 ? " campaign · " : " campaigns · ") + esc(inr(sum(list, r => r.spend))) : "…"}</span>
+    </button>`;
+  rail.innerHTML = `<div class="rail-h">Campaigns</div>` + all + list.map(c => `
+    <button type="button" class="tab" data-tab="${esc(c.id)}" aria-pressed="${state.tab === c.id}">
+      <span class="t">${esc(c.label)}</span>
+      <span class="s">${pill(c.status)} ${esc(inr(c.spend))}</span>
+      <span class="bar"><i style="width:${Math.max(2, Math.round(c.spend / top * 100))}%"></i></span>
+    </button>`).join("");
+}
+
+/* ============================================================
+   Tables
+   ============================================================ */
+function table(cols, rows, opts = {}){
+  const head = cols.map(c => `<th${c.num === false ? "" : ' class="num"'}>${esc(c.label)}</th>`).join("");
+  const body = rows.map(r => `<tr class="${r._cls || ""}">` + cols.map((c,i) => {
+    const cell = c.cell(r);
+    const v = c.sortVal ? c.sortVal(r) : null;
+    return `<td class="${i === 0 ? "" : "num"}"${v == null ? "" : ` data-v="${v}"`}>${cell}</td>`;
+  }).join("") + "</tr>").join("");
+  const tot = opts.total ? `<tr class="tot">` + cols.map((c,i) =>
+    `<td class="${i === 0 ? "" : "num"}">${opts.total(c, i)}</td>`).join("") + "</tr>" : "";
+  return `<div class="scroll"><table class="${opts.sortable === false ? "" : "sortable"}">
+    <thead><tr>${head}</tr></thead><tbody>${body}${tot}</tbody></table></div>`;
+}
+
+function wireSorting(root){
+  root.querySelectorAll("table.sortable").forEach(tbl => {
+    tbl.querySelectorAll("thead th").forEach((th, idx) => {
+      th.setAttribute("tabindex","0");
+      const run = () => {
+        const asc = th.getAttribute("aria-sort") === "descending";
+        tbl.querySelectorAll("thead th").forEach(h => h.removeAttribute("aria-sort"));
+        th.setAttribute("aria-sort", asc ? "ascending" : "descending");
+        const tb = tbl.querySelector("tbody");
+        const totals = [...tb.querySelectorAll("tr.tot")];
+        const rows = [...tb.querySelectorAll("tr")].filter(r => !r.classList.contains("tot"));
+        const key = tr => {
+          const td = tr.children[idx];
+          if (!td) return "";
+          if (td.dataset.v != null) return parseFloat(td.dataset.v);
+          const t = td.textContent.trim();
+          const n = parseFloat(t.replace(/[₹,%\s]/g,""));
+          return Number.isNaN(n) ? t.toLowerCase() : n;
+        };
+        rows.sort((a,b) => {
+          const x = key(a), y = key(b);
+          if (typeof x === "number" && typeof y === "number") return asc ? x - y : y - x;
+          return asc ? String(x).localeCompare(String(y)) : String(y).localeCompare(String(x));
+        });
+        rows.concat(totals).forEach(r => tb.appendChild(r));
+      };
+      th.addEventListener("click", run);
+      th.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " "){ e.preventDefault(); run(); } });
+    });
+  });
+}
+
+const COST_COLS = [
+  { label:"Spend",     cell:r => esc(inr2(r.spend)),        sortVal:r => r.spend },
+  { label:"CPM",       cell:r => esc(r.cpm == null ? "—" : inr2(r.cpm)), sortVal:r => r.cpm ?? -1 },
+  { label:"CTR",       cell:r => esc(pct(r.ctr)),           sortVal:r => r.ctr ?? -1 },
+  { label:"Clicks",    cell:r => esc(int(r.clicks)),        sortVal:r => r.clicks },
+  { label:"Installs",  cell:r => esc(int(r.installs)),      sortVal:r => r.installs },
+  { label:"Cost/inst.",cell:r => esc(per(r.spend, r.installs)), sortVal:r => r.installs ? r.spend/r.installs : Infinity },
+  { label:"Regs",      cell:r => esc(int(r.regs)),          sortVal:r => r.regs },
+  { label:"Cost/reg.", cell:r => esc(per(r.spend, r.regs)), sortVal:r => r.regs ? r.spend/r.regs : Infinity }
+];
+function totalsRow(list){
+  const s = sum(list, r => r.spend), i = sum(list, r => r.installs), g = sum(list, r => r.regs), c = sum(list, r => r.clicks);
+  return (col, idx) => {
+    if (idx === 0) return "Total";
+    switch (col.label){
+      case "Spend": return esc(inr2(s));
+      case "Clicks": return esc(int(c));
+      case "Installs": return esc(int(i));
+      case "Regs": return esc(int(g));
+      case "Cost/inst.": return esc(per(s, i));
+      case "Cost/reg.": return esc(per(s, g));
+      case "Impressions": return esc(int(sum(list, r => r.impressions)));
+      default: return "—";
+    }
+  };
+}
+
+/* ============================================================
+   Sheet
+   ============================================================ */
+function card(title, note, inner, foot){
+  return `<section class="card">
+    <div class="card-h"><h3>${title}</h3>${note ? `<span class="note">${note}</span>` : ""}</div>
+    ${inner}${foot ? `<div class="foot">${foot}</div>` : ""}</section>`;
+}
+function sliceBody(key, build){ return build(); }
+
+function renderSheet(){
+  const host = $("#sheet");
+  host.innerHTML = state.tab === "all" ? sheetAll() : sheetCampaign(state.tab);
+  wireSorting(host);
+}
+
+function sheetAll(){
+  const scoped = state.activeOnly ? "active campaigns only" : "every campaign, active or paused";
+  const camps = card(state.activeOnly ? "Running now" : "Every campaign", scoped + " — click any column to re-sort",
+    sliceBody("campaigns", () => {
+      const list = visible();
+      if (!list.length) return `<div class="state"><div class="p">No campaigns delivered in this range.</div></div>`;
+      return table([{ label:"Campaign", num:false, cell:r =>
+        `${esc(r.label)}<span class="sub">${pill(r.status)} ${esc(int(r.reach))} reached</span>` }, ...COST_COLS],
+        list.map(r => Object.assign(r, { _cls: r.delivered ? "" : "dead" })), { total: totalsRow(list) });
+    }),
+    "Reach is omitted from the total: Meta de-duplicates people, so campaign reaches cannot be added.");
+
+  const creatives = card("Creative leaderboard", scoped + " — best-spending ad first",
+    sliceBody("ads", () => {
+      const byId = {}; allCampaigns().forEach(c => byId[c.id] = c.label);
+      const keep = visibleIds();
+      const ads = (rowsOf("ads") || []).map(normalise).filter(a => keep.has(a.campaign_id));
+      if (!ads.length) return `<div class="state"><div class="p">No ads delivered in this range.</div></div>`;
+      return table([
+        { label:"Creative", num:false, cell:r =>
+          `${esc(r.name)}<span class="sub">${pill(r.status)} ${esc(byId[r.campaign_id] || "—")}</span>` },
+        ...COST_COLS
+      ], ads.map(r => Object.assign(r, { _cls: r.delivered ? "" : "dead" })), { total: totalsRow(ads) });
+    }),
+    truncNote("ads"));
+
+  return camps + creatives;
+}
+
+function sheetCampaign(id){
+  const camp = allCampaigns().find(c => c.id === id);
+  if (!camp) return card("Campaign", "", `<div class="state"><div class="p">This campaign did not deliver in the selected range. Pick a wider range or another campaign.</div></div>`);
+
+  const header = `<section class="card">
+    <div class="card-h">
+      <h3>${esc(camp.label)} ${pill(camp.status)}</h3>
+      <span class="note">${esc(camp.name)}</span>
+    </div>
+    <div class="strip">
+      <div><div class="k">Spend</div><div class="v mono">${esc(inr2(camp.spend))}</div></div>
+      <div><div class="k">+ GST</div><div class="v mono">${esc(inr2(camp.spend * (1 + GST)))}</div></div>
+      <div><div class="k">Reach</div><div class="v mono">${esc(int(camp.reach))}</div></div>
+      <div><div class="k">CPM</div><div class="v mono">${esc(camp.cpm == null ? "—" : inr2(camp.cpm))}</div></div>
+      <div><div class="k">CTR</div><div class="v mono">${esc(pct(camp.ctr))}</div></div>
+      <div><div class="k">Installs</div><div class="v mono">${esc(int(camp.installs))}</div></div>
+      <div><div class="k">Cost/inst.</div><div class="v mono">${esc(per(camp.spend, camp.installs))}</div></div>
+      <div><div class="k">Cost/reg.</div><div class="v mono">${esc(per(camp.spend, camp.regs))}</div></div>
+    </div></section>`;
+
+  const creatives = card("Creatives in this campaign", "one row per ad",
+    sliceBody("ads", () => {
+      const ads = (rowsOf("ads") || []).map(normalise).filter(a => a.campaign_id === id);
+      if (!ads.length) return `<div class="state"><div class="p">No ads in this campaign delivered in this range.</div></div>`;
+      const dead = ads.filter(a => !a.delivered).length;
+      return table([
+        { label:"Creative", num:false, cell:r =>
+          `${esc(r.name)}<span class="sub">${pill(r.status)}${r.linkClicks == null ? "" : " " + esc(int(r.linkClicks)) + " link clicks"}</span>` },
+        ...COST_COLS
+      ], ads.map(r => Object.assign(r, { _cls: r.delivered ? "" : "dead" })), { total: totalsRow(ads) })
+      + (dead ? `<div class="foot">${dead} creative${dead > 1 ? "s" : ""} recorded no impressions in this range — check Ads Manager for a rejection or a paused ad set.</div>` : "");
+    }));
+
+  const daily = card("Day by day", "every day this campaign ran",
+    sliceBody("daily", () => {
+      const days = (rowsOf("daily") || []).map(normalise).filter(r => r.id === id && r.date)
+        .sort((a,b) => a.date < b.date ? 1 : -1);
+      if (!days.length) return `<div class="state"><div class="p">Meta returned no day-level rows for this campaign in this range.</div></div>`;
+      return table([
+        { label:"Day", num:false, cell:r => esc(dayLabel(r.date)), sortVal:r => r.date.replace(/-/g,"") },
+        { label:"Reach", cell:r => esc(int(r.reach)), sortVal:r => r.reach },
+        { label:"Impressions", cell:r => esc(int(r.impressions)), sortVal:r => r.impressions },
+        ...COST_COLS.filter(c => c.label !== "Spend").slice(0,3),
+        { label:"Spend", cell:r => esc(inr2(r.spend)), sortVal:r => r.spend },
+        { label:"Installs", cell:r => esc(int(r.installs)), sortVal:r => r.installs },
+        { label:"Regs", cell:r => esc(int(r.regs)), sortVal:r => r.regs }
+      ], days, { total: totalsRow(days) });
+    }),
+    "Days and the campaign header read the same lifetime window, so they reconcile — except reach, which is left out of the total. The 31 Aug row is a part-day.");
+
+  const age = card("Who it reached", "campaign broken down by age band",
+    sliceBody("age", () => {
+      const bands = (rowsOf("age") || []).map(normalise).filter(r => r.id === id && r.age)
+        .sort((a,b) => a.age < b.age ? -1 : 1);
+      if (!bands.length) return `<div class="state"><div class="p">No age breakdown available for this campaign in this range.</div></div>`;
+      return table([{ label:"Age", num:false, cell:r => esc(r.age) }, ...COST_COLS], bands, { total: totalsRow(bands) });
+    }));
+
+  return header + creatives + daily + age;
+}
+
+function truncNote(key){
+  const d = state.data[key];
+  return d && d.more ? "Meta had more rows than this page requested — the lowest-spending ads are not shown." : "";
+}
+
+/* ============================================================
+   Paint
+   ============================================================ */
+let queued = false;
+function paint(){
+  if (queued) return;
+  queued = true;
+  requestAnimationFrame(() => {
+    queued = false;
+    renderScope(); renderBand(); renderLatest(); renderRail(); renderSheet();
+  });
+}
+
+/* ============================================================
+   Events
+   ============================================================ */
+document.addEventListener("click", e => {
+  const sc = e.target.closest("[data-scope]");
+  if (sc){
+    const v = sc.dataset.scope === "true";
+    if (v !== state.activeOnly){ state.activeOnly = v; state.picked = false; autoTab(); paint(); }
+    return;
+  }
+  const t = e.target.closest("[data-tab]");
+  if (t){ state.tab = t.dataset.tab; state.picked = true; paint(); return; }
+});
+
+/* ============================================================
+   Boot — everything is already here
+   ============================================================ */
+state.data = {
+  campaigns: { rows: CAMP.map(hCamp),  more:false },
+  ads:       { rows: ADS.map(hAd),     more:false },
+  daily:     { rows: DAILY.map(hDay),  more:false },
+  age:       { rows: AGE.map(hAge),    more:false }
+};
+autoTab();
+paint();
+</script>
+
+</body>
+</html>
