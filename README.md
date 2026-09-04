@@ -2,7 +2,7 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 3 September 2026, 9:00 pm IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 4 September 2026, 1:21 pm IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
   Defaults to the campaigns that are active; a switch shows all eight.
