@@ -164,6 +164,39 @@ td .sub{display:block; font-size:11.5px; color:var(--ink-3); font-weight:400}
 .pill.iss{background:var(--warn-bg); color:var(--warn)}
 .pill.bad{background:var(--crit-bg); color:var(--crit)}
 
+/* ---------- trend plots ---------- */
+.plots{position:relative; display:grid; grid-template-columns:minmax(0,1fr); gap:2px; background:var(--hair); --data:#12885e}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .plots{--data:#16ac78}}
+:root[data-theme="dark"] .plots{--data:#16ac78}
+.plot{min-width:0; background:var(--surface); padding:12px 20px 8px}
+.plot .cap{display:flex; flex-wrap:wrap; justify-content:space-between; align-items:baseline; gap:4px 14px; margin-bottom:2px}
+.plot .cap b{font-weight:600; font-size:13px}
+.plot .cap .hint{font-size:12px; color:var(--ink-3)}
+.plot .frame{overflow-x:auto; -webkit-overflow-scrolling:touch}
+.plot svg{display:block; width:100%; min-width:470px; height:auto}
+.plot .gr{stroke:var(--hair); stroke-width:1}
+.plot .ln{fill:none; stroke:var(--data); stroke-width:2; stroke-linejoin:round; stroke-linecap:round}
+.plot .ar{fill:var(--data); opacity:.10}
+.plot .dt{fill:var(--data); stroke:var(--surface); stroke-width:2}
+.plot .tk{fill:var(--ink-3); font-size:10px; font-family:"IBM Plex Mono",monospace}
+.plot .lb{fill:var(--ink-2); font-size:11.5px; font-family:"IBM Plex Mono",monospace; font-weight:500}
+.plot .hr{stroke:var(--rule); stroke-width:1; visibility:hidden}
+.plots.on .hr{visibility:visible}
+.tip{
+  position:absolute; z-index:3; pointer-events:none; opacity:0; transform:translate(-50%,-100%);
+  background:var(--surface); border:1px solid var(--rule); border-radius:9px; box-shadow:var(--shadow);
+  padding:8px 11px; font-size:12px; white-space:nowrap; transition:opacity .08s linear;
+}
+.plots.on .tip{opacity:1}
+.tip .d{font-weight:600; margin-bottom:4px}
+.tip .r{display:flex; justify-content:space-between; gap:14px; color:var(--ink-2)}
+.tip .r span:last-child{font-family:"IBM Plex Mono",monospace; color:var(--ink)}
+@media (prefers-reduced-motion: reduce){.tip{transition:none}}
+.readout{padding:14px 20px; font-size:13.5px; line-height:1.62; color:var(--ink-2); border-top:1px solid var(--hair)}
+.readout + .readout{border-top:0; padding-top:0}
+.readout b{color:var(--ink); font-weight:600}
+.readout .mo{font-family:"IBM Plex Mono",monospace}
+
 /* ---------- states ---------- */
 .state{padding:22px 20px; display:flex; flex-direction:column; gap:5px}
 .state .h{font-weight:600; font-size:14px}
@@ -244,6 +277,10 @@ const CAMP  = [[0,"India | MBBS Students | ios","PAUSED",23042.48,235066,71921,1
 const ADS   = [["Test 4",0,"CAMPAIGN_PAUSED",23042.48,235066,71921,1714,0.73,98.03,1527,429,183],["v5 - I am a med student",5,"ACTIVE",21318.24,292274,136132,3978,1.36,72.94,3198,1839,778],["v1",1,"CAMPAIGN_PAUSED",13698.31,430493,245898,16344,3.8,31.82,16605,905,312],["v4 - Ecg",5,"ACTIVE",10327.57,302905,159135,1936,0.64,34.1,1501,829,300],["Medical AI for Physicians",2,"CAMPAIGN_PAUSED",8839.91,272911,143356,4115,1.51,32.39,4161,527,128],["v3",3,"CAMPAIGN_PAUSED",4248.86,86866,56474,638,0.73,48.91,569,353,98],["v2",4,"CAMPAIGN_PAUSED",3887.06,35114,17800,224,0.64,110.7,161,50,31],["v1",4,"CAMPAIGN_PAUSED",3127.33,27125,13761,423,1.56,115.29,369,77,48],["v2",3,"CAMPAIGN_PAUSED",2833.05,72946,50221,382,0.52,38.84,344,173,48],["creative4",2,"CAMPAIGN_PAUSED",1516.51,35797,22024,440,1.23,42.36,417,63,21],["v1 - Doctors",5,"ACTIVE",1430.46,28850,18412,260,0.9,49.58,203,102,39],["v2 - Female ( asking medicos how they study)",5,"ACTIVE",1257.21,28105,21373,203,0.72,44.73,166,105,44],["Test 3",6,"CAMPAIGN_PAUSED",893.88,54956,44481,276,0.5,16.27,264,null,null],["v3",1,"PAUSED",593.01,36885,33115,415,1.13,16.08,428,5,2],["Test 3",1,"PAUSED",474.44,71868,71083,518,0.72,6.6,521,null,null],["Test - 2",6,"CAMPAIGN_PAUSED",415.29,28764,24301,137,0.48,14.44,131,null,null],["v3 - Checking on your med student friend at 1am",5,"ACTIVE",361.21,7685,6334,51,0.66,47.0,37,24,13],["v1 - male ( asking medicos how they study)",5,"ACTIVE",314.96,7463,5905,63,0.84,42.2,54,30,10],["v2",1,"CAMPAIGN_PAUSED",263.62,35980,31139,1114,3.1,7.33,1156,null,null],["WhatsApp Image 2026-08-03 at 07.25.53.jpeg",7,"CAMPAIGN_PAUSED",208.87,3185,2782,40,1.26,65.58,34,1,1],["creative 2",2,"CAMPAIGN_PAUSED",203.01,4203,3720,40,0.95,48.3,40,3,1],["v1",7,"CAMPAIGN_PAUSED",179.02,4118,3661,30,0.73,43.47,25,null,null],["Test 4",1,"PAUSED",158.5,29990,27426,473,1.58,5.29,495,null,null],["Test - 2",1,"PAUSED",74.19,4517,4168,27,0.6,16.42,28,null,null],["Test 5",1,"PAUSED",70.86,3342,3136,31,0.93,21.2,33,null,null],["creative5",2,"CAMPAIGN_PAUSED",68.56,1695,1485,16,0.94,40.45,12,4,null],["creative3",2,"CAMPAIGN_PAUSED",20.89,381,353,11,2.89,54.83,10,1,1],["Test 4",6,"CAMPAIGN_PAUSED",13.01,475,454,4,0.84,27.39,4,null,null],["2. 1x1.png",7,"CAMPAIGN_PAUSED",8.98,135,131,1,0.74,66.52,null,null,null],["Creative 1",6,"CAMPAIGN_PAUSED",8.3,189,182,1,0.53,43.92,1,null,null],["v1",3,"CAMPAIGN_PAUSED",7.2,327,316,4,1.22,22.02,4,null,null],["Creative 1",1,"PAUSED",2.83,1419,1394,5,0.35,1.99,4,null,null],["v2",7,"CAMPAIGN_PAUSED",1.9,28,28,0,0.0,67.86,null,null,null],["Test 5",6,"ADSET_PAUSED",0.32,8,7,0,0.0,40.0,null,null,null],["Test 3",6,"ADSET_PAUSED",0.28,8,6,0,0.0,35.0,null,null,null],["Test - 2",6,"ADSET_PAUSED",0.07,7,6,0,0.0,10.0,null,null,null],["Test 5",6,"CAMPAIGN_PAUSED",0.03,4,4,0,0.0,7.5,null,null,null],["Test 4",6,"ADSET_PAUSED",0,0,0,0,null,null,null,null,null],["Creative 1",6,"ADSET_PAUSED",0,0,0,0,null,null,null,null,null]];
 const DAILY = [["07-31",6,15.36,480,461,3,0.63,32.0,null,null],["07-31",1,165.46,3943,3699,65,1.65,41.96,null,null],["08-01",6,1057.28,74676,59675,373,0.5,14.16,null,null],["08-01",1,515.16,91734,86807,841,0.92,5.62,null,null],["08-02",6,122.05,4518,4080,19,0.42,27.01,null,null],["08-02",1,40.37,10727,10075,100,0.93,3.76,null,null],["08-03",6,136.49,4737,4232,23,0.49,28.81,null,null],["08-03",1,157.72,15817,14933,264,1.67,9.97,null,null],["08-04",1,724.08,85511,69450,7907,9.25,8.47,null,null],["08-05",1,868.14,79132,68174,6447,8.15,10.97,19,3],["08-06",1,1578.6,7165,6211,417,5.82,220.32,50,10],["08-07",1,1407.69,17660,12754,340,1.93,79.71,120,40],["08-07",2,595.69,11169,9178,212,1.9,53.33,40,9],["08-08",1,749.07,14703,11557,236,1.61,50.95,93,34],["08-08",2,881.17,20555,15607,342,1.66,42.87,75,29],["08-09",1,1270.85,30091,22618,346,1.15,42.23,122,46],["08-09",2,1249.95,38251,28738,637,1.67,32.68,109,25],["08-10",1,688.23,17469,14958,143,0.82,39.4,48,23],["08-10",2,522.4,16891,14687,245,1.45,30.93,48,11],["08-11",1,807.92,25789,20852,224,0.87,31.33,72,30],["08-11",2,784.01,29550,24616,484,1.64,26.53,46,11],["08-12",1,1347.1,46304,37615,366,0.79,29.09,131,34],["08-12",2,1736.16,63594,50172,891,1.4,27.3,78,12],["08-13",1,1686.14,52542,40313,415,0.79,32.09,138,53],["08-13",2,1402.45,39475,30561,604,1.53,35.53,83,21],["08-14",1,1241.65,42555,33366,314,0.74,29.18,96,33],["08-14",2,1508.95,42056,31470,534,1.27,35.88,102,29],["08-15",1,1193.81,37279,30401,324,0.87,32.02,15,7],["08-15",2,1003.66,27954,20879,384,1.37,35.9,13,3],["08-16",1,208.34,7518,6527,51,0.68,27.71,3,null],["08-16",2,200.89,5022,4255,59,1.17,40.0,4,1],["08-17",1,61.49,1675,1582,13,0.78,36.71,1,null],["08-17",2,34.94,653,603,8,1.23,53.51,null,null],["08-17",4,622.3,4660,3197,106,2.27,133.54,28,21],["08-17",0,818.95,6172,4179,71,1.15,132.69,27,9],["08-18",4,850.01,6248,4251,83,1.33,136.05,12,8],["08-18",0,845.62,7564,5319,74,0.98,111.8,36,20],["08-19",4,731.83,6362,4737,104,1.63,115.03,15,13],["08-19",0,732.14,7412,5704,72,0.97,98.78,30,15],["08-20",1,623.94,26880,23829,114,0.42,23.21,2,1],["08-20",2,728.61,19817,17509,222,1.12,36.77,null,null],["08-20",4,680.26,7518,5982,101,1.34,90.48,17,5],["08-20",0,1785.43,21155,14771,131,0.62,84.4,29,14],["08-21",4,443.66,4290,3416,44,1.03,103.42,5,1],["08-21",0,1713.19,15020,11442,128,0.85,114.06,40,17],["08-21",7,398.77,7466,6557,71,0.95,53.41,1,1],["08-22",4,1215.37,13304,9471,72,0.54,91.35,16,9],["08-22",0,1870.73,19717,14110,142,0.72,94.88,30,11],["08-23",4,805.44,7294,5567,44,0.6,110.43,12,7],["08-23",0,2174.19,22643,16156,137,0.61,96.02,34,15],["08-24",4,829.2,6037,4528,47,0.78,137.35,11,9],["08-24",0,1685.37,18379,13615,126,0.69,91.7,15,8],["08-25",4,645.19,5154,4130,38,0.74,125.18,10,6],["08-25",0,1565.88,15083,11900,118,0.78,103.82,24,14],["08-25",3,0.52,15,14,0,0.0,34.67,null,null],["08-26",4,191.13,1372,1273,8,0.58,139.31,1,null],["08-26",0,2431.42,22424,16209,192,0.86,108.43,45,18],["08-26",3,1818.8,47240,38317,271,0.57,38.5,119,37],["08-27",0,2208.95,21435,16536,154,0.72,103.05,38,16],["08-27",3,1593.24,32227,24805,237,0.74,49.44,130,41],["08-27",5,26.45,681,656,5,0.73,38.84,1,null],["08-28",0,1741.52,17467,13255,122,0.7,99.7,32,11],["08-28",3,1048.03,24921,20255,146,0.59,42.05,78,20],["08-28",5,566.52,11080,9282,66,0.6,51.13,35,14],["08-29",0,2191.83,27384,20968,158,0.58,80.04,27,9],["08-29",3,1270.16,26246,21066,168,0.64,48.39,86,15],["08-29",5,464.58,10733,9252,94,0.88,43.29,38,13],["08-30",0,1277.26,13211,10844,89,0.67,96.68,22,6],["08-30",3,1358.36,29490,22502,202,0.68,46.06,110,32],["08-30",5,1783.4,55616,40041,382,0.69,32.07,134,46],["08-31",3,0.0,0,0,0,null,null,3,1],["08-31",5,3276.59,96412,76893,610,0.63,33.99,259,90],["09-01",5,3157.02,63103,48098,641,1.02,50.03,311,113],["09-02",5,3431.87,58002,44691,806,1.39,59.17,390,156],["09-03",5,2870.86,50779,40538,558,1.1,56.54,247,118],["09-04",5,2359.7,36859,30136,473,1.28,64.02,213,92],["09-05",5,3001.21,45601,37975,560,1.23,65.81,255,114],["09-06",5,5188.82,82879,64498,823,0.99,62.61,369,158],["09-07",5,4037.81,67258,54070,678,1.01,60.03,309,120],["09-08",5,2826.95,54038,42644,469,0.87,52.31,214,96],["09-09",5,2027.96,34401,28123,330,0.96,58.95,153,54]];
 const AGE   = [["25-34",6,723.94,62475,47531,267,0.43,11.59,null,null],["35-44",6,235.48,11549,9164,65,0.56,20.39,null,null],["45-54",6,119.63,4943,4014,31,0.63,24.2,null,null],["55-64",6,127.67,2914,2276,21,0.72,43.81,null,null],["65+",6,124.46,2530,1947,34,1.34,49.19,null,null],["25-34",1,5252.91,287098,181430,8891,3.1,18.3,294,113],["35-44",1,4010.78,166213,112673,4901,2.95,24.13,249,83],["45-54",1,2606.05,90823,57474,2425,2.67,28.69,160,58],["55-64",1,1795.93,44063,30018,1576,3.58,40.76,104,34],["65+",1,1670.09,26297,16436,1134,4.31,63.51,101,26],["Unknown",1,0,0,0,0,null,null,2,null],["18-24",2,837.03,44250,21672,479,1.08,18.92,46,10],["25-34",2,2065.07,76237,42335,827,1.08,27.09,99,35],["35-44",2,2219.29,61420,31964,779,1.27,36.13,112,32],["45-54",2,1932.52,51026,24560,790,1.55,37.87,118,28],["55-64",2,1699.26,44215,21840,774,1.75,38.43,109,27],["65+",2,1895.71,37839,17521,973,2.57,50.1,110,19],["Unknown",2,0,0,0,0,null,null,4,null],["25-34",4,2708.56,37308,15175,275,0.74,72.6,53,35],["35-44",4,1287.42,11088,4487,129,1.16,116.11,25,16],["45-54",4,843.12,5092,2239,73,1.43,165.58,10,6],["55-64",4,953.59,4310,1842,68,1.58,221.25,8,7],["65+",4,1221.7,4441,1845,102,2.3,275.1,30,15],["Unknown",4,0,0,0,0,null,null,1,null],["25-34",0,8243.73,127062,36479,682,0.54,64.88,171,72],["35-44",0,4391.78,43422,13689,339,0.78,101.14,69,36],["45-54",0,3405.87,26395,9617,205,0.78,129.03,45,19],["55-64",0,3291.29,20754,7091,207,1.0,158.59,54,23],["65+",0,3709.81,17433,5973,281,1.61,212.8,86,32],["Unknown",0,0,0,0,0,null,null,4,1],["25-34",7,185.41,4958,4347,37,0.75,37.4,1,1],["35-44",7,99.25,1252,1096,16,1.28,79.27,null,null],["45-54",7,50.44,673,556,7,1.04,74.95,null,null],["55-64",7,41.37,337,272,5,1.48,122.76,null,null],["65+",7,22.3,246,197,6,2.44,90.65,null,null],["25-34",3,1855.53,64087,40513,316,0.49,28.95,157,47],["35-44",3,1704.85,37965,22702,263,0.69,44.91,129,37],["45-54",3,1494.36,28199,15591,182,0.65,52.99,87,29],["55-64",3,1058.65,17257,9609,138,0.8,61.35,74,20],["65+",3,975.72,12631,6839,125,0.99,77.25,76,13],["Unknown",3,0,0,0,0,null,null,3,null],["25-34",5,18400.72,439336,157030,3685,0.84,41.88,1585,625],["35-44",5,8805.68,126021,49025,1496,1.19,69.87,739,292],["45-54",5,4344.42,59710,23347,723,1.21,72.76,331,145],["55-64",5,2092.01,25527,9778,341,1.34,81.95,153,68],["65+",5,1376.91,16848,6131,250,1.48,81.73,119,48],["Unknown",5,0,0,0,0,null,null,1,6]];
+/* Ad-level day rows for the campaign that is still running — the creative split
+   under the trend needs them. Refreshed with DAILY; ANAME indexes the ad names. */
+const ANAME = ["v5 - I am a med student","v4 - Ecg","v1 - Doctors","v2 - Female ( asking medicos how they study)","v3 - Checking on your med student friend at 1am","v1 - male ( asking medicos how they study)"];
+const ADAY = [["08-30",5,4,22.03,453,3,2,1],["08-30",5,3,36.41,621,5,6,3],["08-30",5,1,1724.96,54542,374,126,42],["08-31",5,4,2.25,69,0,1,1],["08-31",5,5,14.63,326,2,1,null],["08-31",5,3,0.77,13,0,1,null],["08-31",5,1,3125.42,93270,576,242,83],["08-31",5,2,37.34,870,5,3,null],["08-31",5,0,96.18,1864,27,11,6],["09-01",5,4,6.48,218,1,1,null],["09-01",5,3,9.65,277,3,1,1],["09-01",5,1,864.19,26569,159,82,28],["09-01",5,2,30.88,817,5,3,2],["09-01",5,0,2245.82,35222,473,224,82],["09-02",5,5,1.23,29,3,null,null],["09-02",5,3,0.11,2,0,null,3],["09-02",5,1,185.76,6724,58,33,12],["09-02",5,2,135.73,2791,35,20,8],["09-02",5,0,3109.04,48456,710,337,133],["09-03",5,4,1.08,17,1,1,null],["09-03",5,5,12.9,414,4,1,1],["09-03",5,3,1.55,30,0,1,null],["09-03",5,1,197.34,7360,46,23,10],["09-03",5,2,17.73,336,2,null,null],["09-03",5,0,2640.26,42622,505,221,107],["09-04",5,4,18.23,721,2,null,1],["09-04",5,3,11.31,334,4,2,2],["09-04",5,1,5.88,168,2,4,3],["09-04",5,2,30.04,575,4,3,1],["09-04",5,0,2294.24,35061,461,204,85],["09-05",5,5,52.81,1355,12,6,1],["09-05",5,1,414.72,12053,87,35,19],["09-05",5,0,2533.68,32193,461,214,94],["09-06",5,4,10.83,354,3,2,2],["09-06",5,5,6.96,263,1,1,null],["09-06",5,3,166.09,3701,26,16,8],["09-06",5,1,1526.73,39852,249,107,46],["09-06",5,2,75.0,1259,13,5,1],["09-06",5,0,3403.21,37450,531,238,101],["09-07",5,5,97.2,2008,17,10,4],["09-07",5,3,123.97,2863,23,12,4],["09-07",5,1,1163.38,29502,204,92,30],["09-07",5,2,486.21,8973,87,28,14],["09-07",5,0,2167.05,23912,347,167,68],["09-08",5,4,1.74,50,0,null,null],["09-08",5,5,80.71,1985,14,8,4],["09-08",5,3,104.74,2517,10,3,3],["09-08",5,1,679.88,21279,114,57,19],["09-08",5,2,363.2,7739,66,20,7],["09-08",5,0,1596.68,20468,265,126,63],["09-09",5,4,0.01,1,0,null,null],["09-09",5,5,46.65,992,10,3,null],["09-09",5,3,45.49,1146,8,6,1],["09-09",5,1,444.78,11778,68,28,8],["09-09",5,2,256.43,5529,43,21,6],["09-09",5,0,1253.36,15330,207,99,39]];
 const YEAR  = "2026-";
 const hCamp  = r => ({ id:CID[r[0]], name:r[1], effective_status:r[2], amount_spent:r[3], impressions:r[4],
                        reach:r[5], clicks:r[6], ctr:r[7], cpm:r[8], mobile_app_install:r[9], omni_complete_registration:r[10] });
@@ -254,6 +291,8 @@ const hDay   = r => ({ date_start:YEAR+r[0], id:CID[r[1]], name:CAMP[r[1]][1], a
                        clicks:r[5], ctr:r[6], cpm:r[7], mobile_app_install:r[8], omni_complete_registration:r[9] });
 const hAge   = r => ({ age:r[0], id:CID[r[1]], amount_spent:r[2], impressions:r[3], reach:r[4], clicks:r[5],
                        ctr:r[6], cpm:r[7], mobile_app_install:r[8], omni_complete_registration:r[9] });
+const hAdDay = r => ({ date_start:YEAR+r[0], id:CID[r[1]], name:ANAME[r[2]], amount_spent:r[3],
+                       impressions:r[4], clicks:r[5], mobile_app_install:r[6], omni_complete_registration:r[7] });
 
 /* ============================================================
    Formatting
@@ -518,6 +557,32 @@ function renderSheet(){
   const host = $("#sheet");
   host.innerHTML = state.tab === "all" ? sheetAll() : sheetCampaign(state.tab);
   wireSorting(host);
+  wireTrend(host);
+}
+
+function wireTrend(root){
+  const host = root.querySelector(".plots");
+  if (!host || !TREND) return;
+  const tip = host.querySelector(".tip");
+  const bars = [...host.querySelectorAll(".hr")];
+  const hide = () => host.classList.remove("on");
+  host.addEventListener("pointerleave", hide);
+  host.addEventListener("pointermove", e => {
+    const svg = e.target.closest("svg");
+    if (!svg){ hide(); return; }
+    const box = svg.getBoundingClientRect();
+    if (!box.width) return;
+    const vx = (e.clientX - box.left) / box.width * VB.w;
+    let i = 0, near = Infinity;
+    TREND.xs.forEach((x, k) => { const d = Math.abs(x - vx); if (d < near){ near = d; i = k; } });
+    host.classList.add("on");
+    bars.forEach(l => { l.setAttribute("x1", TREND.xs[i]); l.setAttribute("x2", TREND.xs[i]); });
+    tip.innerHTML = TREND.tip[i];
+    const hb = host.getBoundingClientRect();
+    const px = box.left - hb.left + TREND.xs[i] / VB.w * box.width;
+    tip.style.left = Math.max(96, Math.min(hb.width - 96, px)) + "px";
+    tip.style.top = Math.max(104, e.clientY - hb.top - 12) + "px";
+  });
 }
 
 function sheetAll(){
@@ -607,7 +672,213 @@ function sheetCampaign(id){
       return table([{ label:"Age", num:false, cell:r => esc(r.age) }, ...COST_COLS], bands, { total: totalsRow(bands) });
     }));
 
-  return header + creatives + daily + age;
+  return header + trendCard(id) + creatives + daily + age;
+}
+
+/* ============================================================
+   Cost per registration — the trend and the two halves of it
+   ============================================================ */
+const VB = { w:660, h:98, l:46, r:66, t:12, b:17 };
+let TREND = null;               /* geometry the hover layer reads back */
+
+const niceTop = v => {
+  if (!(v > 0)) return 1;
+  const e = Math.pow(10, Math.floor(Math.log10(v)));
+  return [1, 1.5, 2, 2.5, 3, 4, 5, 7.5, 10].map(m => m * e).find(m => m >= v * 1.02) || 10 * e;
+};
+
+/* Cost per registration IS CPM divided by registrations per 1,000 impressions.
+   Plotting all three on one day axis shows which half of that ratio moved. */
+const MEASURES = [
+  { key:"cpr",  head:"Cost per registration",             note:"what the client pays for one signup",
+    of:d => d.regs ? d.spend / d.regs : null,                 fmt:inr2, tag:inr },
+  { key:"cpm",  head:"What 1,000 impressions cost",        note:"CPM — the price of being seen",
+    of:d => d.impressions ? d.spend / d.impressions * 1000 : null, fmt:inr2, tag:inr },
+  { key:"rate", head:"Registrations per 1,000 impressions", note:"how well those impressions answered",
+    of:d => d.impressions ? d.regs / d.impressions * 1000 : null,
+    fmt:v => v.toFixed(2), tag:v => v.toFixed(2) }
+];
+
+function plot(days, m, xs){
+  const vals = days.map(m.of);
+  const seen = vals.filter(v => v != null);
+  if (!seen.length) return "";
+  const hi = niceTop(Math.max(...seen));
+  const Y = v => VB.h - VB.b - (v / hi) * (VB.h - VB.b - VB.t);
+  const base = Y(0), cap = Y(hi);
+
+  /* A day with no registrations has no ratio — break the line, never bridge it. */
+  const segs = []; let run = [];
+  vals.forEach((v, i) => { if (v == null){ if (run.length) segs.push(run); run = []; } else run.push(i); });
+  if (run.length) segs.push(run);
+
+  const draw = segs.map(seg => {
+    const pts = seg.map(i => xs[i].toFixed(1) + "," + Y(vals[i]).toFixed(1));
+    const area = seg.length > 1
+      ? `<path class="ar" d="M${xs[seg[0]].toFixed(1)},${base.toFixed(1)}L${pts.join("L")}L${xs[seg[seg.length-1]].toFixed(1)},${base.toFixed(1)}Z"/>`
+      : "";
+    return area + `<path class="ln" d="M${pts.join("L")}"/>`;
+  }).join("");
+
+  const last = vals.reduce((a, v, i) => v == null ? a : i, -1);
+  const end = last < 0 ? "" :
+    `<circle class="dt" cx="${xs[last].toFixed(1)}" cy="${Y(vals[last]).toFixed(1)}" r="4"/>` +
+    `<text class="lb" x="${(xs[last] + 10).toFixed(1)}" y="${(Y(vals[last]) + 4).toFixed(1)}">${esc(m.tag(vals[last]))}</text>`;
+
+  return `<div class="plot">
+    <div class="cap"><b>${esc(m.head)}</b><span class="hint">${esc(m.note)}</span></div>
+    <div class="frame"><svg viewBox="0 0 ${VB.w} ${VB.h}" role="img"
+      aria-label="${esc(m.head)}, ${esc(dayLabel(days[0].date))} to ${esc(dayLabel(days[days.length-1].date))}. Every value is in the day-by-day table below.">
+      <line class="gr" x1="${VB.l}" y1="${cap.toFixed(1)}" x2="${VB.w - VB.r}" y2="${cap.toFixed(1)}"/>
+      <line class="gr" x1="${VB.l}" y1="${base.toFixed(1)}" x2="${VB.w - VB.r}" y2="${base.toFixed(1)}"/>
+      <text class="tk" x="${VB.l - 8}" y="${(cap + 3.5).toFixed(1)}" text-anchor="end">${esc(m.tag(hi))}</text>
+      <text class="tk" x="${VB.l - 8}" y="${(base + 3.5).toFixed(1)}" text-anchor="end">0</text>
+      <text class="tk" x="${VB.l}" y="${VB.h - 4}">${esc(dayLabel(days[0].date))}</text>
+      <text class="tk" x="${VB.w - VB.r}" y="${VB.h - 4}" text-anchor="end">${esc(dayLabel(days[days.length-1].date))}</text>
+      <line class="hr" x1="0" x2="0" y1="${cap.toFixed(1)}" y2="${base.toFixed(1)}"/>
+      ${draw}${end}
+    </svg></div>
+  </div>`;
+}
+
+/* Split the settled days into two equal windows — single days are too noisy
+   to carry a story, and the part-day would drag the later one down. */
+function windows(list){
+  const settled = list.filter(d => d.date !== SNAP_DAY);
+  const n = Math.min(8, settled.length - settled.length % 2);
+  if (n < 4) return null;
+  const tail = settled.slice(-n);
+  return { a: tail.slice(0, n / 2), b: tail.slice(n / 2) };
+}
+function agg(rows){
+  const spend = sum(rows, r => r.spend), impr = sum(rows, r => r.impressions), regs = sum(rows, r => r.regs);
+  return { spend, impr, regs,
+           cpm:  impr ? spend / impr * 1000 : null,
+           rate: impr ? regs / impr * 1000 : null,
+           cpr:  regs ? spend / regs : null,
+           from: rows[0].date, to: rows[rows.length - 1].date };
+}
+const swing = (was, now) => (was == null || now == null || !was) ? null : (now / was - 1) * 100;
+const swingTxt = (d, up, down) => d == null ? "barely moved"
+  : Math.abs(d) < 1 ? "held steady"
+  : `<b>${Math.abs(d).toFixed(0)}% ${d > 0 ? up : down}</b>`;
+const span = w => `${esc(dayLabel(w.from))}–${esc(dayLabel(w.to))}`;
+
+function readout(w){
+  const A = agg(w.a), B = agg(w.b);
+  if (A.cpr == null || B.cpr == null) return "";
+  const total = swing(A.cpr, B.cpr);
+  const one = `A registration cost <b class="mo">${esc(inr2(A.cpr))}</b> across ${span(A)} and
+    <b class="mo">${esc(inr2(B.cpr))}</b> across ${span(B)} — ${swingTxt(total, "more", "less")}.`;
+  const two = `Cost per registration is nothing but CPM divided by registrations per 1,000 impressions,
+    so only two things can move it. Over those windows impressions were ${swingTxt(swing(A.cpm, B.cpm), "dearer", "cheaper")}
+    and each 1,000 of them produced ${swingTxt(swing(A.rate, B.rate), "more", "fewer")} registrations.`;
+  return `<div class="readout">${one} ${two}</div>`;
+}
+
+/* Which creative the money moved to explains most campaign-level swings. */
+function mixLine(id, w){
+  const rows = (rowsOf("adDaily") || []).map(normalise).filter(r => r.id === id && r.date);
+  if (!rows.length) return "";
+  const share = win => {
+    const dates = new Set(win.map(d => d.date));
+    const list = rows.filter(r => dates.has(r.date));
+    const t = sum(list, r => r.spend), m = {};
+    list.forEach(r => { m[r.name] = (m[r.name] || 0) + r.spend; });
+    return { t, m };
+  };
+  const A = share(w.a), B = share(w.b);
+  if (!A.t || !B.t) return "";
+  let top = null;
+  [...new Set([...Object.keys(A.m), ...Object.keys(B.m)])].forEach(n => {
+    const pa = (A.m[n] || 0) / A.t * 100, pb = (B.m[n] || 0) / B.t * 100;
+    if (!top || Math.abs(pb - pa) > Math.abs(top.pb - top.pa)) top = { n, pa, pb };
+  });
+  if (!top || Math.abs(top.pb - top.pa) < 5) return "";
+  return `<div class="readout">The mix behind that: <b>${esc(top.n)}</b> took
+    <b class="mo">${top.pa.toFixed(0)}%</b> of the spend in the first window and
+    <b class="mo">${top.pb.toFixed(0)}%</b> in the second. Creatives do not convert alike, so a shift
+    this size moves the campaign average on its own — the split below separates the two.</div>`;
+}
+
+const READ = [
+  ["bad",  "costlier + fading"], ["iss", "response fading"],
+  ["iss",  "impressions costlier"], ["live", "improving"], ["off", "steady"]
+];
+function verdict(a, b){
+  if (a.regs < 5 || b.regs < 5 || a.spend < 200 || b.spend < 200)
+    return `<span class="pill off">too little to call</span>`;
+  const dc = swing(a.cpm, b.cpm), dr = swing(a.rate, b.rate);
+  const i = (dr <= -10 && dc >= 10) ? 0 : dr <= -10 ? 1 : dc >= 10 ? 2
+          : (b.cpr != null && a.cpr != null && b.cpr <= a.cpr * 0.9) ? 3 : 4;
+  return `<span class="pill ${READ[i][0]}">${READ[i][1]}</span>`;
+}
+const pair = (was, now, fmt) =>
+  `${was == null ? "—" : esc(fmt(was))} <span class="sub">→ ${now == null ? "—" : esc(fmt(now))}</span>`;
+
+function splitTable(id, w){
+  const rows = (rowsOf("adDaily") || []).map(normalise).filter(r => r.id === id && r.date);
+  if (!rows.length) return "";
+  const pick = win => {
+    const dates = new Set(win.map(d => d.date));
+    return rows.filter(r => dates.has(r.date));
+  };
+  const A = pick(w.a), B = pick(w.b);
+  const names = [...new Set([...A, ...B].map(r => r.name))];
+  const tA = sum(A, r => r.spend), tB = sum(B, r => r.spend);
+  const built = names.map(n => {
+    const a = agg2(A.filter(r => r.name === n)), b = agg2(B.filter(r => r.name === n));
+    a.sh = tA ? a.spend / tA * 100 : 0;
+    b.sh = tB ? b.spend / tB * 100 : 0;
+    return { name:n, a, b, _cls: b.spend ? "" : "dead" };
+  }).sort((x, y) => y.b.spend - x.b.spend);
+  if (!built.length) return "";
+  return card("Creative by creative, window against window",
+    span(agg(w.a)) + " against " + span(agg(w.b)) + " — the part-day is left out of both",
+    table([
+      { label:"Creative", num:false, cell:r => `${esc(r.name)}<span class="sub">${verdict(r.a, r.b)}</span>` },
+      { label:"Spend", cell:r => pair(r.a.spend || null, r.b.spend || null, inr), sortVal:r => r.b.spend },
+      { label:"Share of spend", cell:r => `${r.a.sh.toFixed(0)}% <span class="sub">→ ${r.b.sh.toFixed(0)}%</span>`, sortVal:r => r.b.sh },
+      { label:"CPM", cell:r => pair(r.a.cpm, r.b.cpm, inr2), sortVal:r => r.b.cpm ?? -1 },
+      { label:"Regs/1,000", cell:r => pair(r.a.rate, r.b.rate, v => v.toFixed(2)), sortVal:r => r.b.rate ?? -1 },
+      { label:"Regs", cell:r => `${esc(int(r.a.regs))} <span class="sub">→ ${esc(int(r.b.regs))}</span>`, sortVal:r => r.b.regs },
+      { label:"Cost/reg.", cell:r => pair(r.a.cpr, r.b.cpr, inr2), sortVal:r => r.b.cpr ?? Infinity }
+    ], built, { sortable:true }),
+    `Each cell reads first window → second. A creative is only called when both windows carry at least
+     ₹200 and five registrations; below that the swing is noise. "Impressions costlier" means the auction
+     got dearer while the response held — that is a price problem, not a tired ad. "Response fading" is
+     the opposite, and is the one that a new creative fixes.`);
+}
+function agg2(rows){
+  const o = agg(rows.length ? rows : [{ spend:0, impressions:0, regs:0, date:"" }]);
+  o.sh = 0;
+  return o;
+}
+
+function trendCard(id){
+  const all = (rowsOf("daily") || []).map(normalise)
+    .filter(r => r.id === id && r.date && r.spend > 0)
+    .sort((a, b) => a.date < b.date ? -1 : 1);
+  const days = all.slice(-14);
+  if (days.length < 3){ TREND = null; return ""; }
+
+  const step = (VB.w - VB.l - VB.r) / (days.length - 1);
+  const xs = days.map((_, i) => VB.l + i * step);
+  TREND = { xs, tip: days.map(d => `<div class="d">${esc(dayLabel(d.date))}${d.date === SNAP_DAY ? " — part-day" : ""}</div>` +
+      MEASURES.map(m => { const v = m.of(d);
+        return `<div class="r"><span>${esc(m.head)}</span><span>${v == null ? "—" : esc(m.fmt(v))}</span></div>`;
+      }).join("")) };
+
+  const w = windows(all);
+  const body = `<div class="plots">${MEASURES.map(m => plot(days, m, xs)).join("")}<div class="tip"></div></div>`
+    + (w ? readout(w) + mixLine(id, w) : "");
+  const head = card("Why the cost per registration moved",
+    days.length + " days to " + dayLabel(days[days.length - 1].date) + " — hover any chart to read a day",
+    body,
+    `The three charts share one day axis, so they can be read down a column. The top one is simply the
+     other two divided: a rising cost per registration is either dearer impressions or a weaker response,
+     and the shape says which. ${SNAP_DAY === days[days.length-1].date ? "The last point is a part-day and sits low for that reason alone. " : ""}Every value here also sits in the day-by-day table below.`);
+  return head + (w ? splitTable(id, w) : "");
 }
 
 function truncNote(key){
@@ -649,7 +920,8 @@ state.data = {
   campaigns: { rows: CAMP.map(hCamp),  more:false },
   ads:       { rows: ADS.map(hAd),     more:false },
   daily:     { rows: DAILY.map(hDay),  more:false },
-  age:       { rows: AGE.map(hAge),    more:false }
+  age:       { rows: AGE.map(hAge),    more:false },
+  adDaily:   { rows: ADAY.map(hAdDay), more:false }
 };
 autoTab();
 paint();
