@@ -2,10 +2,10 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 25 September 2026, 8:10 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 25 September 2026, 10:20 pm IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
-  Defaults to the campaigns that are active; a switch shows all eight.
+  Defaults to the campaigns that are active; a switch shows all nine.
 
 **"Why the cost per registration moved"** sits on each campaign. Cost per registration is
 exactly CPM divided by registrations per 1,000 impressions, so the card plots all three on
@@ -14,9 +14,15 @@ which. Under it, a creative-by-creative split compares two equal windows of sett
 (the part-day is excluded from both) and labels each ad — *impressions costlier* is a price
 problem, *response fading* is the one a new creative fixes.
 
-That split reads `ADAY`, ad-level day rows for the campaign that is still running, indexed
+That split reads `ADAY`, ad-level day rows for the campaigns that are still running, indexed
 by `ANAME`. **`ADAY` has to be refreshed alongside `DAILY`** or the split silently goes stale
 while the charts above it move.
+
+A second live campaign, **India | MBBS Students - influencers** (`120249585873390482`),
+opened on 24 Sep 2026 on its own ₹3,000/day budget alongside the original ₹3,000/day
+campaign. Account spend roughly doubled that day — that is a deliberate second campaign,
+not a budget change on the first. It runs the same three influencer creatives, and so far
+only `Influencer - 11sep` has any real delivery in it.
 
 The page carries `noindex, nofollow` so it stays out of search results.
 
