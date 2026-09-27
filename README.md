@@ -2,7 +2,7 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 25 September 2026, 10:20 pm IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 27 September 2026, 8:20 am IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
   Defaults to the campaigns that are active; a switch shows all nine.
@@ -23,6 +23,14 @@ opened on 24 Sep 2026 on its own ₹3,000/day budget alongside the original ₹3
 campaign. Account spend roughly doubled that day — that is a deliberate second campaign,
 not a budget change on the first. It runs the same three influencer creatives, and so far
 only `Influencer - 11sep` has any real delivery in it.
+
+**Budgets were cut on 27 Sep 2026 at 7:36 am** — both campaigns went from ₹3,000/day to
+₹1,000/day (activity log, Power Editor, actor Abhijeet Lenka), so the account cap fell
+from ₹6,000/day to ₹2,000/day. At 7:34 am the influencer ad set `120249585873460482`
+also moved from "Automatically bid for actions" to "Optimize bid for actions" with a
+**₹19.00 bid cap**. Anything from 27 Sep onward is a different regime; do not read it
+against the ₹6,000/day days. `influencer - hasaan` was switched off in the main campaign
+at 9:25 pm on 26 Sep and is now PAUSED in `ADS`.
 
 The page carries `noindex, nofollow` so it stays out of search results.
 
