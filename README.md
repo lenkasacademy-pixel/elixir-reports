@@ -21,8 +21,20 @@ Two things it does deliberately:
   the sum of its campaigns' reach. Per-campaign reach stays on each campaign's tab.
   This is the same rule the campaign and age tables already follow for their totals.
 
-The part-day row is labelled as such, and the footnote names the cheapest settled
-day in the window so the client has something to compare the current day against.
+Two more rules, both about not letting a bad day set a number:
+
+- **The window total covers the settled days only.** `SNAP_DAY` keeps its own row,
+  labelled *part day so far*, but it is out of the total and every rate beside it,
+  and the total row says how many settled days it covers and which day it dropped.
+  Meta revises the last two days all day; without this the window's cost per
+  registration moved between one rebuild and the next.
+- **The "cheapest day" footnote ignores days that barely spent.** A throttled or
+  near-dead day still books registrations earned by the days before it, so its cost
+  per registration is both meaningless and unbeatable. Only days carrying at least
+  half the window's average settled spend are eligible. Before this guard the
+  footnote named 21 Sep at Rs 17.88 — a suppressed-delivery day that took Rs 733 on
+  13,898 impressions against the Rs 3,000-4,000 either side of it — which is not a
+  bar any normal day can clear.
 
 **"Why the cost per registration moved"** sits on each campaign. Cost per registration is
 exactly CPM divided by registrations per 1,000 impressions, so the card plots all three on
