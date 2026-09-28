@@ -585,6 +585,99 @@ function wireTrend(root){
   });
 }
 
+/* ============================================================
+   Account-wide day rollup — the last N days, campaigns added up
+   Spend, impressions, clicks, installs and registrations are all
+   additive across campaigns, so CPM and CTR can be re-derived from
+   the sums. Reach cannot: Meta de-duplicates people, so a day's
+   reach is not the sum of its campaigns' reach and is left out.
+   ============================================================ */
+const DAY_WINDOW = 10;
+
+function dailyRollup(){
+  const keep = visibleIds();
+  const byDay = new Map();
+  (rowsOf("daily") || []).map(normalise)
+    .filter(r => r.date && keep.has(r.id))
+    .forEach(r => {
+      const d = byDay.get(r.date) ||
+        { date:r.date, spend:0, impressions:0, clicks:0, installs:0, regs:0, live:0 };
+      d.spend += r.spend; d.impressions += r.impressions; d.clicks += r.clicks;
+      d.installs += r.installs; d.regs += r.regs;
+      if (r.delivered) d.live += 1;
+      byDay.set(r.date, d);
+    });
+  return [...byDay.values()].map(d => Object.assign(d, {
+    cpm: d.impressions ? d.spend / d.impressions * 1000 : null,
+    ctr: d.impressions ? d.clicks / d.impressions * 100 : null,
+    delivered: d.impressions > 0
+  })).sort((a, b) => a.date < b.date ? 1 : -1);
+}
+
+function dayWindowCard(scoped){
+  const all = dailyRollup();
+  if (!all.length) return "";
+  const win = all.slice(0, DAY_WINDOW);
+  const n = win.length;
+  const S = {
+    spend: sum(win, r => r.spend), imp: sum(win, r => r.impressions),
+    clicks: sum(win, r => r.clicks), installs: sum(win, r => r.installs),
+    regs: sum(win, r => r.regs)
+  };
+  const part = win.find(r => r.date === SNAP_DAY);
+  const settled = win.filter(r => r.date !== SNAP_DAY);
+  const bestReg = settled.filter(r => r.regs).sort((a,b) => a.spend/a.regs - b.spend/b.regs)[0];
+
+  const body = table([
+    { label:"Day", num:false,
+      cell:r => esc(dayLabel(r.date)) +
+        `<span class="sub">${r.date === SNAP_DAY ? "part day so far"
+          : r.live ? r.live + (r.live > 1 ? " campaigns" : " campaign") : "no delivery"}</span>`,
+      sortVal:r => r.date.replace(/-/g,"") },
+    { label:"Spend",      cell:r => esc(inr2(r.spend)),        sortVal:r => r.spend },
+    { label:"Impressions",cell:r => esc(int(r.impressions)),   sortVal:r => r.impressions },
+    { label:"CPM",        cell:r => esc(r.cpm == null ? "—" : inr2(r.cpm)),  sortVal:r => r.cpm ?? -1 },
+    { label:"CTR",        cell:r => esc(pct(r.ctr)),           sortVal:r => r.ctr ?? -1 },
+    { label:"Clicks",     cell:r => esc(int(r.clicks)),        sortVal:r => r.clicks },
+    { label:"Installs",   cell:r => esc(int(r.installs)),      sortVal:r => r.installs },
+    { label:"Cost/inst.", cell:r => esc(per(r.spend, r.installs)),
+      sortVal:r => r.installs ? r.spend/r.installs : Infinity },
+    { label:"Regs",       cell:r => esc(int(r.regs)),          sortVal:r => r.regs },
+    { label:"Cost/reg.",  cell:r => esc(per(r.spend, r.regs)),
+      sortVal:r => r.regs ? r.spend/r.regs : Infinity }
+  ], win.map(r => Object.assign(r, { _cls: r.delivered ? "" : "dead" })), {
+    total: (col, idx) => {
+      if (idx === 0) return n + " day" + (n > 1 ? "s" : "");
+      switch (col.label){
+        case "Spend":       return esc(inr2(S.spend));
+        case "Impressions": return esc(int(S.imp));
+        case "CPM":         return esc(S.imp ? inr2(S.spend / S.imp * 1000) : "—");
+        case "CTR":         return esc(S.imp ? pct(S.clicks / S.imp * 100) : "—");
+        case "Clicks":      return esc(int(S.clicks));
+        case "Installs":    return esc(int(S.installs));
+        case "Cost/inst.":  return esc(per(S.spend, S.installs));
+        case "Regs":        return esc(int(S.regs));
+        case "Cost/reg.":   return esc(per(S.spend, S.regs));
+        default: return "—";
+      }
+    }
+  });
+
+  const foot =
+    `CPM and CTR are re-derived from each day's own spend, impressions and clicks, so they stay `
+    + `correct when two campaigns are added together. <strong>Reach is not shown here</strong>: Meta `
+    + `de-duplicates people, so a day's reach is not the sum of its campaigns' and adding it would `
+    + `overstate. Per-campaign reach is in each campaign's own tab.`
+    + (part ? ` The ${esc(dayLabel(SNAP_DAY))} row is still filling and is excluded from nothing above `
+        + `except your judgement — Meta also revises the two most recent days as late installs land.` : "")
+    + (bestReg ? ` Cheapest settled day in this window: <strong>${esc(dayLabel(bestReg.date))}</strong> at `
+        + `${esc(per(bestReg.spend, bestReg.regs))} a registration.` : "");
+
+  return card("The last " + n + " days",
+    scoped + " &mdash; newest first, campaigns added together, click any column to re-sort",
+    body, foot);
+}
+
 function sheetAll(){
   const scoped = state.activeOnly ? "active campaigns only" : "every campaign, active or paused";
   const camps = card(state.activeOnly ? "Running now" : "Every campaign", scoped + " — click any column to re-sort",
@@ -611,7 +704,7 @@ function sheetAll(){
     }),
     truncNote("ads"));
 
-  return camps + creatives;
+  return dayWindowCard(scoped) + camps + creatives;
 }
 
 function sheetCampaign(id){

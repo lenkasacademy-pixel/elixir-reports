@@ -7,6 +7,23 @@ Client-facing performance reports for Elixir Social's Meta ads (account 13580511
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
   Defaults to the campaigns that are active; a switch shows all nine.
 
+**"The last 10 days"** sits at the top of the all-campaigns view. It rolls `DAILY`
+up across whichever campaigns are in scope and shows spend, impressions, CPM, CTR,
+clicks, installs, cost per install, registrations and cost per registration, newest
+first, with a window total. `DAY_WINDOW` at the top of the rollup controls the length.
+
+Two things it does deliberately:
+
+- **CPM and CTR are re-derived** from each day's own spend, impressions and clicks
+  rather than averaged from the per-campaign values. Averaging two campaigns' CPMs
+  gives a number that is not any real cost.
+- **Reach is not shown at all.** Meta de-duplicates people, so a day's reach is not
+  the sum of its campaigns' reach. Per-campaign reach stays on each campaign's tab.
+  This is the same rule the campaign and age tables already follow for their totals.
+
+The part-day row is labelled as such, and the footnote names the cheapest settled
+day in the window so the client has something to compare the current day against.
+
 **"Why the cost per registration moved"** sits on each campaign. Cost per registration is
 exactly CPM divided by registrations per 1,000 impressions, so the card plots all three on
 one day axis: a rise is either dearer impressions or a weaker response, and the shapes say
