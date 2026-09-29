@@ -2,7 +2,7 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 28 September 2026, 10:00 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 September 2026, 11:00 am IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
   Defaults to the campaigns that are active; a switch shows all nine.
@@ -21,8 +21,20 @@ Two things it does deliberately:
   the sum of its campaigns' reach. Per-campaign reach stays on each campaign's tab.
   This is the same rule the campaign and age tables already follow for their totals.
 
-The part-day row is labelled as such, and the footnote names the cheapest settled
-day in the window so the client has something to compare the current day against.
+Two more rules, both about not letting a bad day set a number:
+
+- **The window total covers the settled days only.** `SNAP_DAY` keeps its own row,
+  labelled *part day so far*, but it is out of the total and every rate beside it,
+  and the total row says how many settled days it covers and which day it dropped.
+  Meta revises the last two days all day; without this the window's cost per
+  registration moved between one rebuild and the next.
+- **The "cheapest day" footnote ignores days that barely spent.** A throttled or
+  near-dead day still books registrations earned by the days before it, so its cost
+  per registration is both meaningless and unbeatable. Only days carrying at least
+  half the window's average settled spend are eligible. Before this guard the
+  footnote named 21 Sep at Rs 17.88 — a suppressed-delivery day that took Rs 733 on
+  13,898 impressions against the Rs 3,000-4,000 either side of it — which is not a
+  bar any normal day can clear.
 
 **"Why the cost per registration moved"** sits on each campaign. Cost per registration is
 exactly CPM divided by registrations per 1,000 impressions, so the card plots all three on
@@ -43,9 +55,14 @@ only `Influencer - 11sep` has any real delivery in it.
 
 **Budgets were cut on 27 Sep 2026 at 7:36 am** — both campaigns went from ₹3,000/day to
 ₹1,000/day (activity log, Power Editor, actor Abhijeet Lenka), so the account cap fell
-from ₹6,000/day to ₹2,000/day. **The first full day under the cap was the cheapest in
-a fortnight**: ₹1,938.12 for 64 registrations, ₹30.28 each, against ₹41.72 on the 26th
-at three times the spend. At 7:34 am the influencer ad set `120249585873460482`
+from ₹6,000/day to ₹2,000/day. **The first day under the cap was the cheapest normal day
+in a fortnight**: 27 Sep settled at ₹1,939.44 for 64 registrations, ₹30.30 each, against
+₹41.74 on the 26th at three times the spend. **28 Sep is not a fair comparison**: it
+spent only ₹709.48 (31 registrations, ₹22.89 each) because delivery thinned all day and
+all but stopped from 3 pm to 9 pm (₹2.74 across those six hours, hourly breakdown). It
+resumed in the 9 pm hour, right after ₹30,000 was added to the prepaid balance at 9:32 pm
+(activity log, "Money added to balance"). Watch the balance: a stall like that looks
+like a cheap day in the tables. At 7:34 am the influencer ad set `120249585873460482`
 also moved from "Automatically bid for actions" to "Optimize bid for actions" with a
 **₹19.00 bid cap**. Anything from 27 Sep onward is a different regime; do not read it
 against the ₹6,000/day days. `influencer - hasaan` was switched off in the main campaign
@@ -83,3 +100,10 @@ split the ad into two rows at the swap date:
 and **append** the new names to `ANAME` while restoring the old names at their
 original indexes — every historical `ADAY` row still points at the creative that
 actually ran.
+
+## Campaigns not in the report
+
+`India | Influencer Videos | App Registrations` (`120249585723440482`) is on the
+account, PAUSED, and has **never delivered**: Meta returns no spend, impression or
+result fields for it at all. So it is deliberately left out of `CID` and `CAMP`. Add it
+the day it spends, **appended to the end of `CID`** so no historical row re-labels itself.
