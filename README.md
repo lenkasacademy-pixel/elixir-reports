@@ -2,7 +2,7 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 28 September 2026, 10:00 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 September 2026, 10:05 am IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
   Defaults to the campaigns that are active; a switch shows all nine.
@@ -43,9 +43,11 @@ only `Influencer - 11sep` has any real delivery in it.
 
 **Budgets were cut on 27 Sep 2026 at 7:36 am** — both campaigns went from ₹3,000/day to
 ₹1,000/day (activity log, Power Editor, actor Abhijeet Lenka), so the account cap fell
-from ₹6,000/day to ₹2,000/day. **The first full day under the cap was the cheapest in
-a fortnight**: ₹1,938.12 for 64 registrations, ₹30.28 each, against ₹41.72 on the 26th
-at three times the spend. At 7:34 am the influencer ad set `120249585873460482`
+from ₹6,000/day to ₹2,000/day. **The two full days under the cap are the cheapest of the
+run**: 27 Sep settled at ₹1,939.44 for 64 registrations, ₹30.30 each, and 28 Sep at
+₹708.17 for 31 registrations, **₹22.84 each** — against ₹41.74 on the 26th at eight
+times the spend. Delivery is now well under the ₹2,000/day cap rather than pressed
+against it, so the cheap days are partly the account simply buying less. At 7:34 am the influencer ad set `120249585873460482`
 also moved from "Automatically bid for actions" to "Optimize bid for actions" with a
 **₹19.00 bid cap**. Anything from 27 Sep onward is a different regime; do not read it
 against the ₹6,000/day days. `influencer - hasaan` was switched off in the main campaign
@@ -83,3 +85,12 @@ split the ad into two rows at the swap date:
 and **append** the new names to `ANAME` while restoring the old names at their
 original indexes — every historical `ADAY` row still points at the creative that
 actually ran.
+
+## Campaigns not in the report
+
+`India | Influencer Videos | App Registrations` (`120249585723440482`) appeared on the
+account by 29 Sep 2026. It is PAUSED and has **never delivered** — Meta returns no
+spend, impression or result fields for it at all — so it is deliberately not in `CID`
+or `CAMP`. Adding a row of nulls would put an empty campaign in the rail and the
+all-campaigns count for no gain. Add it the day it spends, **appended to the end of
+`CID`** so no historical row re-labels itself.
