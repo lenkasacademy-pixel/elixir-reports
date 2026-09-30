@@ -2,7 +2,7 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 September 2026, 11:00 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 30 September 2026, 8:10 am IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
   Defaults to the campaigns that are active; a switch shows all nine.
@@ -55,18 +55,34 @@ only `Influencer - 11sep` has any real delivery in it.
 
 **Budgets were cut on 27 Sep 2026 at 7:36 am** — both campaigns went from ₹3,000/day to
 ₹1,000/day (activity log, Power Editor, actor Abhijeet Lenka), so the account cap fell
-from ₹6,000/day to ₹2,000/day. **The first day under the cap was the cheapest normal day
-in a fortnight**: 27 Sep settled at ₹1,939.44 for 64 registrations, ₹30.30 each, against
-₹41.74 on the 26th at three times the spend. **28 Sep is not a fair comparison**: it
-spent only ₹709.48 (31 registrations, ₹22.89 each) because delivery thinned all day and
-all but stopped from 3 pm to 9 pm (₹2.74 across those six hours, hourly breakdown). It
-resumed in the 9 pm hour, right after ₹30,000 was added to the prepaid balance at 9:32 pm
-(activity log, "Money added to balance"). Watch the balance: a stall like that looks
-like a cheap day in the tables. At 7:34 am the influencer ad set `120249585873460482`
+from ₹6,000/day to ₹2,000/day. **29 Sep is now the best day of the new regime**:
+₹945.71 for 33 registrations, **₹28.66 each**, beating the 27th's ₹30.30 — and it did it
+on less than half the cap. 92 installs at ₹10.28. The run since the cut reads
+₹30.30 (27th) → ₹22.97 (28th) → **₹28.66 (29th)**, against ₹41.74 on the 26th at three
+times the spend.
+
+**28 Sep is still not a fair comparison**: it spent only ₹712.22 (31 registrations,
+₹22.97 each) because delivery thinned all day and all but stopped from 3 pm to 9 pm
+(₹2.74 across those six hours, hourly breakdown). It resumed in the 9 pm hour, right after
+₹30,000 was added to the prepaid balance at 9:32 pm (activity log, "Money added to
+balance"). Watch the balance: a stall like that looks like a cheap day in the tables.
+Meta later settled the 28th up by ₹2.74 (₹709.48 → ₹712.22) with the registration count
+unchanged.
+
+**The account has not touched its ₹2,000/day cap since the 27th** — ₹712.22, ₹945.71, and
+₹158.29 so far on the 30th. The activity log records nothing since the 28 Sep top-up but
+Meta's own daily billing, so this is delivery, not a settings change.
+
+At 7:34 am on the 27th the influencer ad set `120249585873460482`
 also moved from "Automatically bid for actions" to "Optimize bid for actions" with a
 **₹19.00 bid cap**. Anything from 27 Sep onward is a different regime; do not read it
 against the ₹6,000/day days. `influencer - hasaan` was switched off in the main campaign
 at 9:25 pm on 26 Sep and is now PAUSED in `ADS`.
+
+**No rename or creative swap this refresh.** `v4 - Ecg` and `v1 - male` are still absent
+from ad-level reads because their ad ids now carry the post-22-Sep creatives; the split
+rows in `ADS` reproduce Meta's totals to the paisa, and the activity log for 28–30 Sep
+contains only billing events. Nothing was appended to `ANAME`.
 
 The page carries `noindex, nofollow` so it stays out of search results.
 
