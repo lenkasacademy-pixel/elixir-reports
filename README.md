@@ -2,7 +2,7 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 September 2026, 11:00 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 1 October 2026, 8:10 am IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
   Defaults to the campaigns that are active; a switch shows all nine.
@@ -58,11 +58,13 @@ only `Influencer - 11sep` has any real delivery in it.
 from ₹6,000/day to ₹2,000/day. **The first day under the cap was the cheapest normal day
 in a fortnight**: 27 Sep settled at ₹1,939.44 for 64 registrations, ₹30.30 each, against
 ₹41.74 on the 26th at three times the spend. **28 Sep is not a fair comparison**: it
-spent only ₹709.48 (31 registrations, ₹22.89 each) because delivery thinned all day and
+spent only ₹712.22 (31 registrations, ₹22.98 each) because delivery thinned all day and
 all but stopped from 3 pm to 9 pm (₹2.74 across those six hours, hourly breakdown). It
 resumed in the 9 pm hour, right after ₹30,000 was added to the prepaid balance at 9:32 pm
 (activity log, "Money added to balance"). Watch the balance: a stall like that looks
-like a cheap day in the tables. At 7:34 am the influencer ad set `120249585873460482`
+like a cheap day in the tables. **Delivery settled back to normal after it**: 29 Sep took
+₹946.93 for 33 registrations (₹28.70 each) and 30 Sep ₹1,143.58 for 26 (₹43.98) — both
+well under the ₹2,000/day cap, and the 30th is the dearest of the three post-cut days. At 7:34 am the influencer ad set `120249585873460482`
 also moved from "Automatically bid for actions" to "Optimize bid for actions" with a
 **₹19.00 bid cap**. Anything from 27 Sep onward is a different regime; do not read it
 against the ₹6,000/day days. `influencer - hasaan` was switched off in the main campaign
