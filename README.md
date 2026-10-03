@@ -2,7 +2,7 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 September 2026, 11:00 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 3 October 2026, 8:10 am IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
   Defaults to the campaigns that are active; a switch shows all nine.
@@ -55,18 +55,33 @@ only `Influencer - 11sep` has any real delivery in it.
 
 **Budgets were cut on 27 Sep 2026 at 7:36 am** — both campaigns went from ₹3,000/day to
 ₹1,000/day (activity log, Power Editor, actor Abhijeet Lenka), so the account cap fell
-from ₹6,000/day to ₹2,000/day. **The first day under the cap was the cheapest normal day
-in a fortnight**: 27 Sep settled at ₹1,939.44 for 64 registrations, ₹30.30 each, against
-₹41.74 on the 26th at three times the spend. **28 Sep is not a fair comparison**: it
-spent only ₹709.48 (31 registrations, ₹22.89 each) because delivery thinned all day and
-all but stopped from 3 pm to 9 pm (₹2.74 across those six hours, hourly breakdown). It
-resumed in the 9 pm hour, right after ₹30,000 was added to the prepaid balance at 9:32 pm
-(activity log, "Money added to balance"). Watch the balance: a stall like that looks
-like a cheap day in the tables. At 7:34 am the influencer ad set `120249585873460482`
-also moved from "Automatically bid for actions" to "Optimize bid for actions" with a
-**₹19.00 bid cap**. Anything from 27 Sep onward is a different regime; do not read it
-against the ₹6,000/day days. `influencer - hasaan` was switched off in the main campaign
-at 9:25 pm on 26 Sep and is now PAUSED in `ADS`.
+from ₹6,000/day to ₹2,000/day. **Five settled days later the account is running at about
+₹1,140 a day, well under the cap**, because the influencer campaign has all but stopped
+delivering: ₹2,902.25 on the 26th, then ₹478.36, ₹22.73, ₹56.17, ₹58.57, ₹34.80 and
+₹3.54 on 2 October. Almost everything the account now spends is the signups campaign.
+
+**Cost per registration since the cut is noisy, not directional**: ₹30.30 on the 27th,
+₹22.98, ₹28.69, ₹44.04 on the 30th, ₹23.82 on 1 October, ₹30.01 on the 2nd. The settled
+nine days of the current window come to ₹24,968.57 for 674 registrations, **₹37.05
+each**. Read the window total, not any single day — which is exactly what the rollup at
+the top of the all-campaigns view does.
+
+**Two days in the last snapshot were wrong to read, and both have now settled.** The 28th
+was published at ₹709.48 and settled at ₹712.22 — the funding stall was real (delivery
+all but stopped from 3 pm to 9 pm and resumed after ₹30,000 was added to the prepaid
+balance at 9:32 pm), but the day was not as cheap as it looked: 31 registrations at
+₹22.98, not ₹22.89. The 29th was published as a ₹363.16 part-day and settled at
+₹946.93 for 33 registrations. That is the part-day guard earning its keep: had the 29th
+set a headline it would have read ₹11.01 a registration.
+
+At 7:34 am on 27 Sep the influencer ad set `120249585873460482` also moved from
+"Automatically bid for actions" to "Optimize bid for actions" with a **₹19.00 bid cap**.
+Anything from 27 Sep onward is a different regime; do not read it against the
+₹6,000/day days. `influencer - hasaan` was switched off in the main campaign at 9:25 pm
+on 26 Sep and is PAUSED in `ADS`.
+
+**No ad was renamed between the 29 Sep and 3 Oct snapshots** — every name in the
+ad-level read matched `ANAME`, and `ANAME` is unchanged and unreordered.
 
 The page carries `noindex, nofollow` so it stays out of search results.
 
