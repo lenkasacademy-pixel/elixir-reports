@@ -2,10 +2,10 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 September 2026, 11:00 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 4 October 2026, 7:00 am IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
-  Defaults to the campaigns that are active; a switch shows all nine.
+  Defaults to the campaigns that are active — **just one now** — and a switch shows all nine.
 
 **"The last 10 days"** sits at the top of the all-campaigns view. It rolls `DAILY`
 up across whichever campaigns are in scope and shows spend, impressions, CPM, CTR,
@@ -47,26 +47,74 @@ That split reads `ADAY`, ad-level day rows for the campaigns that are still runn
 by `ANAME`. **`ADAY` has to be refreshed alongside `DAILY`** or the split silently goes stale
 while the charts above it move.
 
-A second live campaign, **India | MBBS Students - influencers** (`120249585873390482`),
-opened on 24 Sep 2026 on its own ₹3,000/day budget alongside the original ₹3,000/day
-campaign. Account spend roughly doubled that day — that is a deliberate second campaign,
-not a budget change on the first. It runs the same three influencer creatives, and so far
-only `Influencer - 11sep` has any real delivery in it.
+## The account changed gear on 3 October 2026
 
-**Budgets were cut on 27 Sep 2026 at 7:36 am** — both campaigns went from ₹3,000/day to
-₹1,000/day (activity log, Power Editor, actor Abhijeet Lenka), so the account cap fell
-from ₹6,000/day to ₹2,000/day. **The first day under the cap was the cheapest normal day
-in a fortnight**: 27 Sep settled at ₹1,939.44 for 64 registrations, ₹30.30 each, against
-₹41.74 on the 26th at three times the spend. **28 Sep is not a fair comparison**: it
-spent only ₹709.48 (31 registrations, ₹22.89 each) because delivery thinned all day and
-all but stopped from 3 pm to 9 pm (₹2.74 across those six hours, hourly breakdown). It
-resumed in the 9 pm hour, right after ₹30,000 was added to the prepaid balance at 9:32 pm
-(activity log, "Money added to balance"). Watch the balance: a stall like that looks
-like a cheap day in the tables. At 7:34 am the influencer ad set `120249585873460482`
-also moved from "Automatically bid for actions" to "Optimize bid for actions" with a
-**₹19.00 bid cap**. Anything from 27 Sep onward is a different regime; do not read it
-against the ₹6,000/day days. `influencer - hasaan` was switched off in the main campaign
-at 9:25 pm on 26 Sep and is now PAUSED in `ADS`.
+Three things happened within an hour, all in the activity log, actor Abhijeet Lenka:
+
+- **11:07 am — the main campaign's daily budget went from ₹1,000 to ₹8,000**
+  (`Campaign budget updated`, 100000 → 800000 paise, "Per day"). An eightfold
+  raise. The ad set also moved to "Optimize bid for actions" with a ₹30.00 cap at
+  11:07 am, and then back to "Automatically bid for actions" at 8:01 pm the same
+  day, so the cap lasted nine hours and is not in force now.
+- **11:56 am – 12:00 pm — eleven new ads were created** and pushed through review,
+  the **E3 series**: `E3-01` … `E3-07`, `E3-08a`, `E3-08b`, `E3-09`, `E3-10`. All
+  went live that afternoon. They are appended to the end of `ANAME` (indexes
+  8–18); nothing was reordered.
+- **12:14 pm — `Influencer - 11sep` was switched off in the main campaign**, and
+  **12:15 pm — the second campaign `India | MBBS Students - influencers`
+  (`120249585873390482`) was paused outright.** It had already dwindled to a few
+  rupees a day. It closes at ₹7,700.08 for 386 installs and 160 registrations,
+  **₹48.13 a registration** — well above the account average.
+
+**So one campaign is live now, not two, and it is running new creative on eight
+times the budget.** Anything from 3 October onward is a third regime; do not read
+it against either the ₹6,000/day days or the ₹2,000/day days that followed.
+
+**Day one of the new regime looks good, and it is the new creative doing it.**
+3 October took ₹4,619.67 for 140 registrations, **₹33.00 each**, against ₹30.12 on
+the 2nd at a quarter of the spend — so an eightfold budget raise cost about 10% on
+efficiency, which is cheap. Within that day:
+
+| 3 Oct | spend | registrations | each |
+|---|---|---|---|
+| the eleven new E3 ads | ₹3,459.72 | 113 | **₹30.62** |
+| the five older creatives | ₹1,157.44 | 27 | ₹42.87 |
+
+Three of the eleven carry almost all of it — `E3-09 Asking medicos which AI app
+they trust` (₹1,616.70, 59 registrations, ₹27.40), `E3-10 Rounds with the
+strictest senior` (₹688.55, 23, ₹29.94) and `E3-08a 3 medical apps to 1`
+(₹656.11, 24, ₹27.34). The other eight took ₹498.36 between them for 7
+registrations. One day is one day, but the ranking is worth watching rather than
+assuming the whole series works.
+
+**4 October is a part-day and is excluded from every headline.** It is also the
+clearest proof yet of why: **it moved by ₹175.43 between two connector calls
+minutes apart** while this snapshot was being built (₹3,280.29 → ₹3,455.72,
+installs 384 → 426, registrations 119 → 132). Never let that day set a number.
+
+## The earlier regimes, for reading older rows
+
+A second campaign, **India | MBBS Students - influencers**
+(`120249585873390482`), opened on 24 Sep 2026 on its own ₹3,000/day budget
+alongside the original ₹3,000/day campaign — which is why account spend roughly
+doubled that day. It ran the same three influencer creatives and only
+`Influencer - 11sep` ever had real delivery in it. It was paused on 3 Oct.
+
+**Budgets were cut on 27 Sep 2026 at 7:36 am** — both campaigns went from
+₹3,000/day to ₹1,000/day, so the account cap fell from ₹6,000/day to ₹2,000/day.
+The first day under the cap was the cheapest normal day in a fortnight: 27 Sep
+settled at ₹1,939.44 for 64 registrations, ₹30.30 each, against ₹41.74 on the 26th
+at three times the spend. **28 Sep is not a fair comparison**: it settled at only
+₹712.22 (31 registrations, ₹22.97 each) because delivery thinned all day and all
+but stopped from 3 pm to 9 pm, resuming only after ₹30,000 was added to the
+prepaid balance at 9:32 pm. Watch the balance: a stall like that looks like a
+cheap day in the tables. `influencer - hasaan` was switched off in the main
+campaign at 9:25 pm on 26 Sep and is PAUSED in `ADS`.
+
+The settled days either side of the last snapshot: 29 Sep ₹946.93 / 33
+registrations / ₹28.69, 30 Sep ₹1,145.17 / 26 / ₹44.05, 1 Oct ₹1,143.27 / 48 /
+₹23.82, 2 Oct ₹1,144.37 / 38 / ₹30.12. Meta also revised 28 Sep up by ₹2.74 after
+publication, and the 29th — published as a ₹363.16 part-day — settled at ₹946.93.
 
 The page carries `noindex, nofollow` so it stays out of search results.
 
