@@ -2,7 +2,7 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 September 2026, 11:00 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 5 October 2026, 8:30 am IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
   Defaults to the campaigns that are active; a switch shows all nine.
@@ -47,18 +47,36 @@ That split reads `ADAY`, ad-level day rows for the campaigns that are still runn
 by `ANAME`. **`ADAY` has to be refreshed alongside `DAILY`** or the split silently goes stale
 while the charts above it move.
 
-A second live campaign, **India | MBBS Students - influencers** (`120249585873390482`),
-opened on 24 Sep 2026 on its own ₹3,000/day budget alongside the original ₹3,000/day
-campaign. Account spend roughly doubled that day — that is a deliberate second campaign,
-not a budget change on the first. It runs the same three influencer creatives, and so far
-only `Influencer - 11sep` has any real delivery in it.
+The second campaign, **India | MBBS Students - influencers** (`120249585873390482`),
+opened on 24 Sep 2026 on its own ₹3,000/day budget alongside the original. It is now
+**PAUSED** and last spent ₹2.51 on 3 Oct 2026, closing at ₹7,700.08 for 160 registrations.
+Only `Influencer - 11sep` ever had real delivery in it. One campaign is live now.
+
+## Scaled up hard on 3–4 Oct 2026
+
+The live campaign's daily budget went **₹1,000 → ₹8,000 at 11:07 am on 3 Oct** (actor
+Abhijeet Lenka, `ads MCP server`) and **₹8,000 → ₹12,000 at 12:10 pm on 4 Oct** (Ads
+Manager App for iOS); ₹30,000 was added to the prepaid balance at 6:48 pm on the 4th.
+At 11:58 am on 3 Oct **eleven new creatives were created** — `E3-01` … `E3-10`, with two
+variants of `E3-08`. The activity log shows `Ad created` for each, so these are genuinely
+new ad objects, not renames: no `Ad name updated` and no creative swap on an existing id.
+They are **appended to the end of `ANAME`**, as the rename rule below requires.
+
+They now carry the account: ₹21,445.16 of the ₹24,742.10 spent since, and `E3-08a 3 medical
+apps to 1` alone took ₹8,799.20 of the 4th. **4 Oct is the cheapest day in the report** —
+₹14,787.42 for 847 registrations, **₹17.46 each**, against ₹30.30 on 27 Sep and ₹41.74 on
+the 26th. It is one day on a budget that had been in place for a few hours; it is a
+promising start, not a rate. `Influencer - 11sep` was set Inactive in the live campaign at
+12:14 pm on 3 Oct.
+
+## The earlier regime (for reference)
 
 **Budgets were cut on 27 Sep 2026 at 7:36 am** — both campaigns went from ₹3,000/day to
 ₹1,000/day (activity log, Power Editor, actor Abhijeet Lenka), so the account cap fell
 from ₹6,000/day to ₹2,000/day. **The first day under the cap was the cheapest normal day
 in a fortnight**: 27 Sep settled at ₹1,939.44 for 64 registrations, ₹30.30 each, against
 ₹41.74 on the 26th at three times the spend. **28 Sep is not a fair comparison**: it
-spent only ₹709.48 (31 registrations, ₹22.89 each) because delivery thinned all day and
+settled at ₹712.22 (31 registrations, ₹22.98 each) because delivery thinned all day and
 all but stopped from 3 pm to 9 pm (₹2.74 across those six hours, hourly breakdown). It
 resumed in the 9 pm hour, right after ₹30,000 was added to the prepaid balance at 9:32 pm
 (activity log, "Money added to balance"). Watch the balance: a stall like that looks
@@ -67,6 +85,18 @@ also moved from "Automatically bid for actions" to "Optimize bid for actions" wi
 **₹19.00 bid cap**. Anything from 27 Sep onward is a different regime; do not read it
 against the ₹6,000/day days. `influencer - hasaan` was switched off in the main campaign
 at 9:25 pm on 26 Sep and is now PAUSED in `ADS`.
+
+## Pull every lifetime array in one batch
+
+`CAMP`, `ADS` and `AGE` are all `date_preset: "maximum"`, so they all include the live
+part-day — and **the part-day moves between calls**. On the 5 Oct refresh the campaign
+total read ₹1,15,715.68 on one call and ₹1,16,070.97 on another a few minutes later
+(+₹299.65), which made the `AGE`-vs-`CAMP` assertion fail by ₹83.29 for no reason other
+than the two pulls landing at different moments. Taken in a single batch they agree to the
+paisa. The same applies to `DAILY` vs the account totals and to `ADAY` vs `DAILY`: 4 Oct
+alone moved ₹5.10 between two batches while still inside Meta's ~48h revision window.
+**Issue all the pulls together, then assert. A failing assertion after staggered calls is
+usually the clock, not the data** — but re-pull as one batch and confirm before believing that.
 
 The page carries `noindex, nofollow` so it stays out of search results.
 
