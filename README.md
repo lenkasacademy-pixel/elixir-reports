@@ -2,7 +2,7 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 September 2026, 11:00 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 7 October 2026, 8:05 am IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
   Defaults to the campaigns that are active; a switch shows all nine.
@@ -47,26 +47,29 @@ That split reads `ADAY`, ad-level day rows for the campaigns that are still runn
 by `ANAME`. **`ADAY` has to be refreshed alongside `DAILY`** or the split silently goes stale
 while the charts above it move.
 
-A second live campaign, **India | MBBS Students - influencers** (`120249585873390482`),
-opened on 24 Sep 2026 on its own ₹3,000/day budget alongside the original ₹3,000/day
-campaign. Account spend roughly doubled that day — that is a deliberate second campaign,
-not a budget change on the first. It runs the same three influencer creatives, and so far
-only `Influencer - 11sep` has any real delivery in it.
+**India | MBBS Students - influencers** (`120249585873390482`) opened on 24 Sep 2026 on its
+own budget alongside the original campaign and was **switched off at 12:15 pm on 3 Oct 2026**
+(activity log, Active -> Inactive, actor Abhijeet Lenka). Its last spend was 3 Oct; it is now
+PAUSED and closes at Rs 7,700.08 for 160 registrations. Only
+`India | MBBS Students - Doctors | App Downloads | signups` (`120249183882130482`) is still live.
 
-**Budgets were cut on 27 Sep 2026 at 7:36 am** — both campaigns went from ₹3,000/day to
-₹1,000/day (activity log, Power Editor, actor Abhijeet Lenka), so the account cap fell
-from ₹6,000/day to ₹2,000/day. **The first day under the cap was the cheapest normal day
-in a fortnight**: 27 Sep settled at ₹1,939.44 for 64 registrations, ₹30.30 each, against
-₹41.74 on the 26th at three times the spend. **28 Sep is not a fair comparison**: it
-spent only ₹709.48 (31 registrations, ₹22.89 each) because delivery thinned all day and
-all but stopped from 3 pm to 9 pm (₹2.74 across those six hours, hourly breakdown). It
-resumed in the 9 pm hour, right after ₹30,000 was added to the prepaid balance at 9:32 pm
-(activity log, "Money added to balance"). Watch the balance: a stall like that looks
-like a cheap day in the tables. At 7:34 am the influencer ad set `120249585873460482`
-also moved from "Automatically bid for actions" to "Optimize bid for actions" with a
-**₹19.00 bid cap**. Anything from 27 Sep onward is a different regime; do not read it
-against the ₹6,000/day days. `influencer - hasaan` was switched off in the main campaign
-at 9:25 pm on 26 Sep and is now PAUSED in `ADS`.
+**October is a different regime — do not read it against September.** Budgets were cut to
+Rs 1,000/day on 27 Sep, then raised again twice on the live campaign: **Rs 1,000 -> Rs 8,000/day
+at 11:07 am on 3 Oct**, and **Rs 8,000 -> Rs 12,000/day at 12:10 pm on 4 Oct** (activity log,
+Power Editor, actor Abhijeet Lenka). Rs 30,000 was added to the prepaid balance at 6:48 pm on
+4 Oct. The ad set bid moved twice on the 3rd as well: to "Optimize bid for actions" with a
+**Rs 30.00 cap** at 11:07 am, then back to automatic bidding with the cap removed at 8:01 pm.
+
+**Eleven new creatives were created between 11:56 and 11:58 am on 3 Oct** — the `E3` set,
+`E3-01` through `E3-10` (with `E3-08a` and `E3-08b`) — and they now carry nearly all delivery.
+They are appended to `ANAME` at indexes 8-18 and to `ADS`. `E3-08a 3 medical apps to 1` alone
+has taken Rs 23,566. **They are much cheaper per registration**: the page's own window
+comparison reads Rs 32.26 across 29 Sep-2 Oct against **Rs 19.17 across 3 Oct-6 Oct**, 41% less,
+and attributes it to 85% more registrations per 1,000 impressions rather than to price.
+4 Oct is the account's largest day ever: Rs 14,846.11 for 849 registrations at **Rs 17.49** each.
+
+`influencer - hasaan` was switched off in the main campaign at 9:25 pm on 26 Sep and is
+PAUSED in `ADS`.
 
 The page carries `noindex, nofollow` so it stays out of search results.
 
