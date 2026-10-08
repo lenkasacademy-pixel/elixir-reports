@@ -2,7 +2,7 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 September 2026, 11:00 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 8 October 2026, 8:15 am IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
   Defaults to the campaigns that are active; a switch shows all nine.
@@ -47,11 +47,13 @@ That split reads `ADAY`, ad-level day rows for the campaigns that are still runn
 by `ANAME`. **`ADAY` has to be refreshed alongside `DAILY`** or the split silently goes stale
 while the charts above it move.
 
-A second live campaign, **India | MBBS Students - influencers** (`120249585873390482`),
-opened on 24 Sep 2026 on its own ₹3,000/day budget alongside the original ₹3,000/day
-campaign. Account spend roughly doubled that day — that is a deliberate second campaign,
-not a budget change on the first. It runs the same three influencer creatives, and so far
-only `Influencer - 11sep` has any real delivery in it.
+**India | MBBS Students - influencers** (`120249585873390482`) opened on 24 Sep 2026 on its
+own ₹3,000/day budget alongside the original ₹3,000/day campaign — account spend roughly
+doubled that day, a deliberate second campaign rather than a budget change on the first. It
+ran the same three influencer creatives and only `Influencer - 11sep` ever had real delivery
+in it. **It was switched off at 12:15 pm on 3 Oct 2026 and is now PAUSED**, closing at
+₹7,700.08 for 160 registrations. `India | MBBS Students - Doctors | App Downloads | signups`
+(`120249183882130482`) is the only campaign still spending.
 
 **Budgets were cut on 27 Sep 2026 at 7:36 am** — both campaigns went from ₹3,000/day to
 ₹1,000/day (activity log, Power Editor, actor Abhijeet Lenka), so the account cap fell
@@ -67,6 +69,34 @@ also moved from "Automatically bid for actions" to "Optimize bid for actions" wi
 **₹19.00 bid cap**. Anything from 27 Sep onward is a different regime; do not read it
 against the ₹6,000/day days. `influencer - hasaan` was switched off in the main campaign
 at 9:25 pm on 26 Sep and is now PAUSED in `ADS`.
+
+## Elixir 3.0: eleven new creatives on 3 Oct 2026
+
+Eleven ads named `E3-01` … `E3-10` (with both `E3-08a` and `E3-08b`) were created through the
+ads MCP server at 11:58–12:00 on 3 Oct 2026, cleared review the same afternoon and began
+delivering between 12:02 and 3:14 pm. They are appended to `ANAME` at indexes 8–18 and to
+`ADS`; cover frames are already in `ad-thumbs/`. `Influencer - 11sep` was paused in the main
+campaign at 12:14 pm the same day, just before they started.
+
+The budget moved with them, all on campaign `120249183882130482`:
+
+| When | Daily budget |
+|---|---|
+| 27 Sep 7:36 am | ₹3,000 → ₹1,000 |
+| 3 Oct 11:07 am (ads MCP server) | ₹1,000 → ₹8,000 |
+| 4 Oct 12:10 pm (Ads Manager iOS) | ₹8,000 → ₹12,000 |
+
+At 8:01 pm on 3 Oct the ad set `120249183882120482` also dropped its ₹30.00 bid cap
+("Optimize bid for social") and returned to "Automatically bid for actions". **Anything from
+3 Oct onward is a third regime** — do not read it against either the ₹6,000/day days or the
+₹2,000/day days.
+
+Prepaid balance top-ups: ₹30,000 on 28 Sep 9:32 pm, ₹30,000 on 4 Oct 6:48 pm, ₹70,000 on
+7 Oct 6:04 pm. Keep watching the balance — a stall still looks like a cheap day in the tables.
+
+**The new creatives are the cheapest registrations the account has bought:** ₹19.03 each
+across 3–7 Oct, against ₹31.72 over 28 Sep–2 Oct and ₹33.06 lifetime. `E3-08a 3 medical apps
+to 1` carries most of it alone (₹29,352.78 / 1,591 registrations / ₹18.45).
 
 The page carries `noindex, nofollow` so it stays out of search results.
 
@@ -100,6 +130,14 @@ split the ad into two rows at the swap date:
 and **append** the new names to `ANAME` while restoring the old names at their
 original indexes — every historical `ADAY` row still points at the creative that
 actually ran.
+
+**On every later refresh the old name is simply gone.** Ad-level reads return one row per ad
+id under the *new* name carrying the whole history, so `v4 - Ecg` and `v1 - male` no longer
+appear at all. Do not read that as a deleted ad: the tell is that the split pair still sums
+to Meta's merged row to the paisa (verified again on 8 Oct 2026 — 10361.32 + 96.01 =
+10457.33, and 1076.22 + 413.03 = 1489.25). Keep the `REPLACED` rows exactly as published and
+pull the new creative's own figures with a ranged read from the swap date (22 Sep), which is
+also the only way to get its de-duplicated reach.
 
 ## Campaigns not in the report
 
