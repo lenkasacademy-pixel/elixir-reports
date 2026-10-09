@@ -2,7 +2,7 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 September 2026, 11:00 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 9 October 2026, 8:15 am IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
   Defaults to the campaigns that are active; a switch shows all nine.
@@ -47,26 +47,50 @@ That split reads `ADAY`, ad-level day rows for the campaigns that are still runn
 by `ANAME`. **`ADAY` has to be refreshed alongside `DAILY`** or the split silently goes stale
 while the charts above it move.
 
-A second live campaign, **India | MBBS Students - influencers** (`120249585873390482`),
-opened on 24 Sep 2026 on its own ₹3,000/day budget alongside the original ₹3,000/day
-campaign. Account spend roughly doubled that day — that is a deliberate second campaign,
-not a budget change on the first. It runs the same three influencer creatives, and so far
-only `Influencer - 11sep` has any real delivery in it.
+**The account was scaled up sharply on 3-4 October 2026, and is down to one live
+campaign.** `India | MBBS Students - influencers` (`120249585873390482`) was paused on
+3 Oct at 12:15 pm (activity log, Power Editor, actor Abhijeet Lenka) and has not spent
+since; it closes at Rs 7,700.08 for 160 registrations. Everything live is now
+`India | MBBS Students - Doctors | App Downloads | signups` (`120249183882130482`),
+whose daily budget went **Rs 1,000 -> Rs 8,000 at 11:07 am on 3 Oct** (ads MCP server)
+and **Rs 8,000 -> Rs 12,000 at 12:10 pm on 4 Oct** (Ads Manager App for iOS). Rs 30,000
+and Rs 70,000 were added to the prepaid balance on 4 and 7 Oct, so the stalls that made
+28 Sep look cheap have not recurred.
 
-**Budgets were cut on 27 Sep 2026 at 7:36 am** — both campaigns went from ₹3,000/day to
-₹1,000/day (activity log, Power Editor, actor Abhijeet Lenka), so the account cap fell
-from ₹6,000/day to ₹2,000/day. **The first day under the cap was the cheapest normal day
-in a fortnight**: 27 Sep settled at ₹1,939.44 for 64 registrations, ₹30.30 each, against
-₹41.74 on the 26th at three times the spend. **28 Sep is not a fair comparison**: it
-spent only ₹709.48 (31 registrations, ₹22.89 each) because delivery thinned all day and
-all but stopped from 3 pm to 9 pm (₹2.74 across those six hours, hourly breakdown). It
-resumed in the 9 pm hour, right after ₹30,000 was added to the prepaid balance at 9:32 pm
-(activity log, "Money added to balance"). Watch the balance: a stall like that looks
-like a cheap day in the tables. At 7:34 am the influencer ad set `120249585873460482`
-also moved from "Automatically bid for actions" to "Optimize bid for actions" with a
-**₹19.00 bid cap**. Anything from 27 Sep onward is a different regime; do not read it
-against the ₹6,000/day days. `influencer - hasaan` was switched off in the main campaign
-at 9:25 pm on 26 Sep and is now PAUSED in `ADS`.
+**Eleven new creatives went live just after noon on 3 Oct** - `E3-01` to `E3-10`, with
+E3-08 running as two cuts (`E3-08a`, `E3-08b`). They are genuinely new ad objects, not
+renames: the activity log shows each going Pending Process -> Pending Review -> Active
+on 3 Oct with no `Ad updated` creative-id change anywhere, and their lifetime totals
+equal their own day rows from 3 Oct on. They were **appended to the end of `ANAME`**
+(indexes 8-18) so no historical `ADAY` row re-labels itself. `E3-08a 3 medical apps to 1`
+alone has taken Rs 37,738.97 and is now the second-biggest creative on the account.
+`Influencer - 11sep` was switched off in the main campaign at 12:14 pm on 3 Oct and is
+PAUSED in `ADS`.
+
+**The scale-up got cheaper, not dearer.** Across the five settled days 4-8 Oct the
+account spent Rs 58,611.91 for 3,162 registrations, **Rs 18.54 each**, against Rs 30.30
+on 27 Sep (the best normal day under the old Rs 1,000 cap) and Rs 41.74 on 26 Sep.
+8 Oct is the largest day in the account's history: Rs 13,181.89, 672 registrations,
+Rs 19.62 each. Anything from 3 Oct onward is a different regime again; do not read it
+against the Rs 1,000/day days or the Rs 6,000/day days.
+
+`influencer - hasaan` was switched off in the main campaign at 9:25 pm on 26 Sep and is
+PAUSED in `ADS`.
+
+## Residuals carried by this snapshot
+
+`CAMP` is built from the `DAILY` sums, so `CAMP` = `sum(DAILY)` = `sum(ADS)` exactly for
+all nine campaigns, and campaign day rows equal the `level: "ad_account"` daily totals on
+spend *and* impressions on every day. Two residuals remain, both on the one live campaign
+and both expected:
+
+- `AGE` for campaign 5 sums **Rs 34.35 / 760 impressions above** its `CAMP` total (0.02%).
+  Re-running the same breakdown over settled days only (to 8 Oct) cuts it to Rs 0.78 /
+  15 impressions, so almost all of it is the live part-day moving between two calls
+  minutes apart - the same effect the September pull saw as Rs 28.35.
+- `ADAY` trails `DAILY` by **Rs 0.76 / 13 impressions on 8 Oct** and Rs 26.31 on the
+  9 Oct part-day. Installs and registrations match to the unit on every settled day.
+  8 Oct was still inside Meta's ~48h settling window when this was taken.
 
 The page carries `noindex, nofollow` so it stays out of search results.
 
