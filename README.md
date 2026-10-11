@@ -2,10 +2,11 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 September 2026, 11:00 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 11 October 2026, 8:15 am IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
   Defaults to the campaigns that are active; a switch shows all nine.
+  Only one campaign is active now.
 
 **"The last 10 days"** sits at the top of the all-campaigns view. It rolls `DAILY`
 up across whichever campaigns are in scope and shows spend, impressions, CPM, CTR,
@@ -47,26 +48,41 @@ That split reads `ADAY`, ad-level day rows for the campaigns that are still runn
 by `ANAME`. **`ADAY` has to be refreshed alongside `DAILY`** or the split silently goes stale
 while the charts above it move.
 
-A second live campaign, **India | MBBS Students - influencers** (`120249585873390482`),
-opened on 24 Sep 2026 on its own ₹3,000/day budget alongside the original ₹3,000/day
-campaign. Account spend roughly doubled that day — that is a deliberate second campaign,
-not a budget change on the first. It runs the same three influencer creatives, and so far
-only `Influencer - 11sep` has any real delivery in it.
+**The account changed regime on 3–4 October 2026 — nothing before it is comparable.**
+`India | MBBS Students - Doctors | App Downloads | signups` (`120249183882130482`) had its daily
+budget raised from ₹1,000 to **₹8,000** at 11:07 am on 3 Oct and from ₹8,000 to **₹12,000** at
+12:10 pm on 4 Oct (activity log, actor Abhijeet Lenka). At 11:56–11:58 am on the 3rd, **eleven new
+creatives were created** — `E3-01 Ranked every way medicos use AI` through
+`E3-10 Rounds with the strictest senior` — and they carry almost all of the new spend. The ad set
+also moved to "Optimize bid for actions" with a ₹30.00 cap at 11:07 am on the 3rd and back to
+"Automatically bid for actions" at 8:01 pm the same day, so the cap applied for one day only.
 
-**Budgets were cut on 27 Sep 2026 at 7:36 am** — both campaigns went from ₹3,000/day to
-₹1,000/day (activity log, Power Editor, actor Abhijeet Lenka), so the account cap fell
-from ₹6,000/day to ₹2,000/day. **The first day under the cap was the cheapest normal day
-in a fortnight**: 27 Sep settled at ₹1,939.44 for 64 registrations, ₹30.30 each, against
-₹41.74 on the 26th at three times the spend. **28 Sep is not a fair comparison**: it
-spent only ₹709.48 (31 registrations, ₹22.89 each) because delivery thinned all day and
-all but stopped from 3 pm to 9 pm (₹2.74 across those six hours, hourly breakdown). It
-resumed in the 9 pm hour, right after ₹30,000 was added to the prepaid balance at 9:32 pm
-(activity log, "Money added to balance"). Watch the balance: a stall like that looks
-like a cheap day in the tables. At 7:34 am the influencer ad set `120249585873460482`
-also moved from "Automatically bid for actions" to "Optimize bid for actions" with a
-**₹19.00 bid cap**. Anything from 27 Sep onward is a different regime; do not read it
-against the ₹6,000/day days. `influencer - hasaan` was switched off in the main campaign
-at 9:25 pm on 26 Sep and is now PAUSED in `ADS`.
+**`India | MBBS Students - influencers` (`120249585873390482`) is PAUSED** — switched off at
+12:15 pm on 3 Oct. It closes at ₹7,700.08 for 386 installs and 160 registrations (₹48.13 each).
+It stays in `CID`/`CAMP` at index 8; do not remove it.
+
+**The twelvefold budget made registrations cheaper, not dearer.** 4–10 October settled at
+₹84,525.92 for 4,342 registrations — **₹19.47 each** — against ₹29.30 over 27 Sep–2 Oct on the
+₹1,000 cap and ₹39.66 over 20–26 Sep before it. `E3-08a 3 medical apps to 1` alone has taken
+₹52,887.25 at **₹19.34** a registration, against ₹31.38 for `v5 - I am a med student`, the old
+workhorse. On the current pull the three biggest E3 creatives sit at ₹19.34, ₹19.71 and ₹20.33;
+every pre-October creative on the account is dearer.
+
+**Watch the prepaid balance.** ₹30,000 was added at 6:48 pm on 4 Oct and ₹70,000 at 6:04 pm on the
+7th. At ₹12,000/day the balance now empties in under a week, and a stall reads as a cheap day in
+these tables — that is exactly what 28 Sep 2026 was (₹709.48, delivery all but stopped 3–9 pm,
+resuming right after a ₹30,000 top-up at 9:32 pm).
+
+**Known drift at this snapshot.** Two reconciliation residuals, both benign and both recorded here
+so the next refresh does not chase them:
+
+- `DAILY` for campaign 5 sums to **7 impressions** less than `CAMP` (4,113,853 vs 4,113,860).
+  Spend, clicks, installs and registrations agree to the paisa. It is the live part-day: the
+  lifetime and per-day calls were issued together but Meta counted 7 more impressions for one of
+  them. `ADS` and `AGE` both agree with `CAMP`.
+- `AGE` for campaign 0 (`India | MBBS Students | ios`, long paused) sums to **183** registrations
+  against `CAMP`'s 184. This is **pre-existing** — it is in the published 29 Sep file too — and is
+  Meta's own breakdown: one registration lands outside every age band, including `Unknown`.
 
 The page carries `noindex, nofollow` so it stays out of search results.
 
