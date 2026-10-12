@@ -2,10 +2,19 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 September 2026, 11:00 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 12 October 2026, 8:05 am IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
   Defaults to the campaigns that are active; a switch shows all nine.
+
+  **With only one campaign still active, the page now opens on that campaign's tab,
+  not the all-campaigns sheet.** `autoTab()` has always done this
+  (`if (!state.picked && state.activeOnly && list.length === 1)`), it just never
+  fired before, because two campaigns were live. So "The last 10 days" card is one
+  click away on load - press **All campaigns** in the rail to see it. This is designed
+  behaviour, not a regression; it was A/B-checked against `main` before publishing. If
+  it is the wrong default for a one-campaign account, that is a change to `autoTab()`,
+  not to the data.
 
 **"The last 10 days"** sits at the top of the all-campaigns view. It rolls `DAILY`
 up across whichever campaigns are in scope and shows spend, impressions, CPM, CTR,
@@ -47,11 +56,13 @@ That split reads `ADAY`, ad-level day rows for the campaigns that are still runn
 by `ANAME`. **`ADAY` has to be refreshed alongside `DAILY`** or the split silently goes stale
 while the charts above it move.
 
-A second live campaign, **India | MBBS Students - influencers** (`120249585873390482`),
+A second campaign, **India | MBBS Students - influencers** (`120249585873390482`),
 opened on 24 Sep 2026 on its own ₹3,000/day budget alongside the original ₹3,000/day
 campaign. Account spend roughly doubled that day — that is a deliberate second campaign,
-not a budget change on the first. It runs the same three influencer creatives, and so far
-only `Influencer - 11sep` has any real delivery in it.
+not a budget change on the first. It ran the same three influencer creatives and only
+`Influencer - 11sep` ever got real delivery in it. **It is now PAUSED** and closed at
+₹7,700.08 for 160 registrations — ₹48.13 each, against ₹24.55 on the campaign that is
+still running. It is the account's dearest line and stopping it was the right call.
 
 **Budgets were cut on 27 Sep 2026 at 7:36 am** — both campaigns went from ₹3,000/day to
 ₹1,000/day (activity log, Power Editor, actor Abhijeet Lenka), so the account cap fell
@@ -72,6 +83,88 @@ The page carries `noindex, nofollow` so it stays out of search results.
 
 A live version of the same report — one that queries Meta each time it is opened — is kept
 as a private Claude artifact rather than here.
+
+## What changed at this refresh (12 Oct 2026)
+
+Previous snapshot: 29 Sep 2026, 11:00 am IST. Thirteen days of new delivery, and the
+account is a different size than it was.
+
+**Budgets went up six-fold, then half again.** The 27 Sep cut to ₹1,000/day held for
+five days. Then at **11:07 am on 3 Oct** the live campaign went ₹1,000 → **₹8,000/day**
+(activity log, api source `ads MCP server`), and at **12:10 pm on 4 Oct** ₹8,000 →
+**₹12,000/day** (`Ads Manager App for iOS`). It has billed around ₹13,000/day since,
+funded by **₹1,70,000 of October top-ups** — ₹30,000 on the 4th, ₹70,000 on the 7th,
+₹70,000 on the 12th. Nothing before 3 Oct is comparable to anything after it; the
+27 Sep "different regime" note below now applies twice over.
+
+**Eleven new creatives, and one of them is already the biggest ad on the account.**
+Eleven `E3-*` ads were created on **3 Oct between 11:56 and 11:58 am** and were live by
+12:08 pm; `Influencer - 11sep` was switched off six minutes later at 12:14 pm. They are
+appended to `ANAME` at indexes 8-18 and the first eight entries are untouched.
+
+| New creative | spend | registrations | each |
+|---|---|---|---|
+| `E3-08a 3 medical apps to 1` | ₹60,788.86 | 3,133 | ₹19.40 |
+| `E3-09` | ₹24,755.27 | 1,232 | ₹20.09 |
+| `E3-10` | ₹15,983.37 | 770 | ₹20.76 |
+| `E3-08b 5 apps on rounds to 1` | ₹841.45 | 34 | ₹24.75 |
+| the other seven | ₹743.65 between them | 7 | - |
+
+`E3-08a` has passed `v5 - I am a med student` (₹54,343.79 lifetime) to become the
+largest single creative in the account's history, in nine days.
+
+**Cost per registration is rising as the spend scales.** ₹19.95 across the nine settled
+days in the window, but it was ₹17.47 on 4 Oct and ₹20.52 by the 11th. Splitting the run
+in half: **₹18.24 (4-7 Oct) against ₹20.94 (8-11 Oct), +15%**. The creative split labels
+**all four spending creatives *response fading*** rather than *impressions costlier* —
+impressions got 2% cheaper over the same span while registrations per 1,000 impressions
+fell 14%. That is the pattern a new creative fixes, not a bidding one, and it is showing
+up nine days into creatives that are themselves brand new.
+
+**No ad was renamed or re-created** between 29 September and this snapshot, other than
+the eleven new ones. The activity log was checked for exactly the creative-swap-behind-a-
+rename case described below; there is none. The two 22 Sep creative splits are retained
+unchanged.
+
+**One campaign is still spending.** `India | MBBS Students - influencers` is PAUSED (see
+above), so eight of the nine campaigns in `CAMP` are now closed and settled.
+
+Account lifetime across all nine campaigns: **₹2,70,431.22 of media, 21,989 installs,
+9,094 registrations**. The active campaign alone: ₹1,97,870.57 media / **₹2,33,487.27
+billed** including 18% GST, 19,012 installs at ₹10.41, **8,059 registrations at
+₹24.55**.
+
+## Reconciliation on this refresh
+
+**Eight of the nine campaigns reconcile exactly** — their `ADS`, `DAILY` and `AGE` rows
+each sum to the campaign's lifetime `CAMP` figures on spend, impressions, installs and
+registrations, to the rupee.
+
+**The live campaign cannot, and the reason is measurable.** Its lifetime read came back
+₹1,97,842.51 on one call and **₹1,97,921.77 a few minutes later** — **+₹79.26**, about
+₹9 a minute of live burn. A lifetime total pulled at one instant and a set of day rows
+pulled at another will never agree while a campaign is spending, so:
+
+- **`CAMP[5]` is derived from the `DAILY` sums**, not from the campaign lifetime read:
+  ₹1,97,870.57 / 44,32,903 impressions / 40,615 clicks / 19,012 installs / 8,059
+  registrations. Reach (967,385) is kept from the campaign read because it cannot be
+  summed, and CTR 0.92 / CPM 44.64 are recomputed from the derived figures. The campaign
+  rail therefore reconciles exactly with the day-by-day table underneath it, which is
+  what a reader can actually check.
+- Residuals against that basis, left visible rather than plugged: `AGE` is exact on spend
+  and impressions, **+2 installs / +3 registrations**. `ADS` is **-₹20.86 / -458
+  impressions / +1 install / +2 registrations**.
+
+**`sum(ADAY) == DAILY` holds for every settled day from 30 Aug to 11 Oct** on spend,
+installs and registrations. 11 Oct carries **₹0.33** of per-ad rounding drift across
+twelve ads; the assertion tolerance is ₹1 for that reason. The 12 Oct part-day differs
+as expected and is excluded everywhere (`ADAY` ₹2,325.59 vs `DAILY` ₹2,302.27).
+
+**A long-paused campaign gained a registration after the fact.** Campaign index 0 moved
+from 183 to 184 lifetime registrations, in the 25-34 band (72 → 73), having not spent in
+weeks. The first run of this refresh only rebuilt `AGE` for the two campaigns thought to
+be moving and the assertion caught it. **Rebuild `AGE` for all nine campaigns every
+refresh** — late attribution reaches campaigns that stopped long ago.
 
 ## A rename can hide a creative swap — check the activity log
 
