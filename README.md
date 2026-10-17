@@ -2,7 +2,7 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 September 2026, 11:00 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 17 October 2026, 8:15 am IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
   Defaults to the campaigns that are active; a switch shows all nine.
@@ -68,6 +68,22 @@ also moved from "Automatically bid for actions" to "Optimize bid for actions" wi
 against the ₹6,000/day days. `influencer - hasaan` was switched off in the main campaign
 at 9:25 pm on 26 Sep and is now PAUSED in `ADS`.
 
+**Then the account changed scale twice in early October.** The live campaign's daily
+budget went from ₹1,000 to **₹8,000** at 11:07 am on 3 Oct (activity log, "ads MCP
+server") and from ₹8,000 to **₹12,000** at 12:10 pm on 4 Oct (Ads Manager App for
+iOS), both actor Abhijeet Lenka. Daily account spend went from about ₹1,100 on the
+1st and 2nd to ₹14,846.11 on the 4th and has run ₹8,612–₹13,451 a day since, so
+**nothing from 3 Oct onward is comparable with the ₹1,000/day fortnight before it**
+— and that fortnight is itself a different regime from the ₹6,000/day days. Balance
+top-ups follow the spend: ₹30,000 on 4 Oct, ₹70,000 on 7 Oct, ₹70,000 on 12 Oct.
+
+**Ten new creatives, `E3-01` … `E3-10`, were created on 3 Oct 2026** (11:56–11:58 am)
+and carry almost all of the new spend. `E3-08a 3 medical apps to 1` alone is at
+₹94,408.61. They were appended to the end of `ANAME`, after the original eight.
+
+`India | MBBS Students - influencers` (`CID[8]`) stopped spending after 3 Oct and now
+reads PAUSED, so **only one campaign is live**.
+
 The page carries `noindex, nofollow` so it stays out of search results.
 
 A live version of the same report — one that queries Meta each time it is opened — is kept
@@ -100,6 +116,30 @@ split the ad into two rows at the swap date:
 and **append** the new names to `ANAME` while restoring the old names at their
 original indexes — every historical `ADAY` row still points at the creative that
 actually ran.
+
+## A deleted ad vanishes from the ad listing — reconcile to catch it
+
+**This bit the report on 17 Oct 2026.** An ordinary ad-level pull
+(`level: "ad"`, `date_preset: "maximum"`) returned 15 ads for the live campaign
+summing to ₹2,03,147.82, while the campaign itself reported ₹2,57,606.53 —
+**₹54,458.71 missing**, and `v5 - I am a med student`, which had ₹50,622.10 of
+history at the previous snapshot, was simply absent.
+
+Nothing was wrong with the data. Two ads had been **deleted** at Meta at 7:39 am on
+15 Oct (activity log, `event_category: "ad"`, actor Abhijeet Lenka, Power Editor):
+
+    Ad status updated  v5 - I am a med student     Active -> Deleted
+    Ad status updated  E3-06 My entire AI stack    Active -> Deleted
+
+**A deleted ad is not returned by an unfiltered ad listing**, exactly as archived
+campaigns are dropped in `halcyon-reports`. Fetch them by `object_ids` (or filter
+`effective_status IN [..., "ARCHIVED", "DELETED"]`); Meta then reports them with
+`effective_status: "ARCHIVED"`. With both included the ad rows equal the campaign to
+the paisa: 2,03,147.82 + 54,351.01 + 107.70 = **2,57,606.53**.
+
+Keep deleted ads in `ADS` with status `ARCHIVED` — the spend was real and the
+creative ledger is the point of the page. **The campaign-vs-ads reconciliation is
+what catches this**; a listing that merely looks short is easy to miss.
 
 ## Campaigns not in the report
 
