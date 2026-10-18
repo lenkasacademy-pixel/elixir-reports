@@ -2,10 +2,11 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 September 2026, 11:00 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 18 October 2026, 8:30 am IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
   Defaults to the campaigns that are active; a switch shows all nine.
+  Only one campaign is live now.
 
 **"The last 10 days"** sits at the top of the all-campaigns view. It rolls `DAILY`
 up across whichever campaigns are in scope and shows spend, impressions, CPM, CTR,
@@ -47,26 +48,36 @@ That split reads `ADAY`, ad-level day rows for the campaigns that are still runn
 by `ANAME`. **`ADAY` has to be refreshed alongside `DAILY`** or the split silently goes stale
 while the charts above it move.
 
-A second live campaign, **India | MBBS Students - influencers** (`120249585873390482`),
-opened on 24 Sep 2026 on its own ₹3,000/day budget alongside the original ₹3,000/day
-campaign. Account spend roughly doubled that day — that is a deliberate second campaign,
-not a budget change on the first. It runs the same three influencer creatives, and so far
-only `Influencer - 11sep` has any real delivery in it.
+**The account re-opened on a much bigger budget on 3-4 October 2026.** It ran about
+Rs 1,100/day from 27 Sep to 2 Oct, took Rs 4,619.67 on 3 Oct, and has run
+Rs 8,612-Rs 13,451 a day since 4 Oct (average Rs 12,038/day across 4-17 Oct). That
+fortnight bought **8,042 registrations for Rs 1,68,525.78 - Rs 20.96 each**, against
+Rs 38.27 over 20-28 Sep and Rs 29.30 over the thin 27 Sep - 2 Oct stretch. CPM barely
+moved (Rs 48.07 -> Rs 41.65), so the gain is response, not price. Anything before
+3 October is a different regime; do not read the two against each other.
 
-**Budgets were cut on 27 Sep 2026 at 7:36 am** — both campaigns went from ₹3,000/day to
-₹1,000/day (activity log, Power Editor, actor Abhijeet Lenka), so the account cap fell
-from ₹6,000/day to ₹2,000/day. **The first day under the cap was the cheapest normal day
-in a fortnight**: 27 Sep settled at ₹1,939.44 for 64 registrations, ₹30.30 each, against
-₹41.74 on the 26th at three times the spend. **28 Sep is not a fair comparison**: it
-spent only ₹709.48 (31 registrations, ₹22.89 each) because delivery thinned all day and
-all but stopped from 3 pm to 9 pm (₹2.74 across those six hours, hourly breakdown). It
-resumed in the 9 pm hour, right after ₹30,000 was added to the prepaid balance at 9:32 pm
-(activity log, "Money added to balance"). Watch the balance: a stall like that looks
-like a cheap day in the tables. At 7:34 am the influencer ad set `120249585873460482`
-also moved from "Automatically bid for actions" to "Optimize bid for actions" with a
-**₹19.00 bid cap**. Anything from 27 Sep onward is a different regime; do not read it
-against the ₹6,000/day days. `influencer - hasaan` was switched off in the main campaign
-at 9:25 pm on 26 Sep and is now PAUSED in `ADS`.
+A new creative set, **E3-01 through E3-10**, started on 3 October and now carries almost
+all delivery. `E3-08a 3 medical apps to 1` alone is at Rs 1,00,251.52 for 4,906
+registrations (**Rs 20.43 each**), then `E3-09` (Rs 22.03) and `E3-10` (Rs 22.35).
+
+**`India | MBBS Students - influencers` (`120249585873390482`) is now PAUSED**, last spend
+3 Oct, closing at Rs 7,700.08 for 160 registrations (Rs 48.13 each). It stays in `CID` and
+`CAMP` at index 8 - never drop a campaign that has delivered.
+
+## Archived ads vanish from the default ad listing
+
+**This nearly broke the 18 Oct 2026 refresh.** `v5 - I am a med student` disappeared from
+an unfiltered ad-level read and a much larger `E3-08a 3 medical apps to 1` appeared in its
+place - exactly the shape of the 23 Sep rename-and-swap trap below. It was neither: `v5`
+had simply been **ARCHIVED**, and archived ads are **not returned by an unfiltered ad
+listing**. `E3-06 My entire AI stack` was hidden the same way.
+
+The tell is arithmetic: with the archived ads excluded, the campaign-5 ad rows came to
+Rs 2,14,231.62 against a campaign total of Rs 2,68,690.33 - a Rs 54,458.71 hole roughly the
+size of the missing ad. **Always filter `effective_status IN ["ACTIVE","PAUSED","ARCHIVED",
+"DELETED","CAMPAIGN_PAUSED","ADSET_PAUSED",...]` on ad-level reads**, then assert the ad rows
+sum to `CAMP`. Archived ads that carry spend belong in `ADS`; archived ads with no spend at
+all are left out, as they always have been.
 
 The page carries `noindex, nofollow` so it stays out of search results.
 
@@ -107,3 +118,19 @@ actually ran.
 account, PAUSED, and has **never delivered**: Meta returns no spend, impression or
 result fields for it at all. So it is deliberately left out of `CID` and `CAMP`. Add it
 the day it spends, **appended to the end of `CID`** so no historical row re-labels itself.
+
+## Reconciling while a campaign is still spending
+
+The live campaign revises the part-day *between calls*. On the 18 Oct refresh the 18 Oct
+row moved Rs 2,243.70 -> Rs 2,338.46 and the age breakdown moved Rs 27.69 then Rs 86.91 in
+the space of a few minutes, so `CAMP`, `ADS`, `DAILY` and `AGE` pulled minutes apart cannot
+tie. **Pull all four in one parallel batch**; done that way they tie to the paisa on spend
+and exactly on impressions, and the campaign-level daily sums equal the
+`level: "ad_account"` daily totals on spend *and* impressions for every one of the 80 days.
+
+What still does not tie is **result counts on the live day**: the breakdowns lead the
+campaign aggregate by a few units (18 Oct: `ADS` +5 installs / +3 registrations, `AGE`
++10 / +3, on 24,892 and 11,086). That is Meta attributing results to ads and age bands
+slightly ahead of the campaign roll-up. Spend and impressions must tie exactly - treat any
+gap there as a real error - but a handful of results on the one still-spending campaign is
+expected. Flag the exact numbers rather than smoothing them.
