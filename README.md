@@ -2,7 +2,7 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 September 2026, 11:00 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 20 October 2026, 8:15 am IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
   Defaults to the campaigns that are active; a switch shows all nine.
@@ -47,11 +47,40 @@ That split reads `ADAY`, ad-level day rows for the campaigns that are still runn
 by `ANAME`. **`ADAY` has to be refreshed alongside `DAILY`** or the split silently goes stale
 while the charts above it move.
 
-A second live campaign, **India | MBBS Students - influencers** (`120249585873390482`),
-opened on 24 Sep 2026 on its own ₹3,000/day budget alongside the original ₹3,000/day
-campaign. Account spend roughly doubled that day — that is a deliberate second campaign,
-not a budget change on the first. It runs the same three influencer creatives, and so far
-only `Influencer - 11sep` has any real delivery in it.
+**India | MBBS Students - influencers** (`120249585873390482`) opened on 24 Sep 2026 on its
+own ₹3,000/day budget alongside the original campaign, which is why account spend roughly
+doubled that day. It spent its last rupee on **3 Oct 2026** and now reads PAUSED, closing at
+₹7,700.08 for 160 registrations. Only `Influencer - 11sep` ever had real delivery in it.
+**`India | MBBS Students - Doctors | App Downloads | signups` is now the only live campaign
+on the account.**
+
+## October 2026: Elixir 3.0, and a 12x budget
+
+**Budgets were raised twice in two days** (activity log, actor Abhijeet Lenka): ₹1,000 →
+₹8,000/day at 11:07 am on 3 Oct (via `ads MCP server`), then ₹8,000 → ₹12,000/day at
+12:10 pm on 4 Oct (Ads Manager App for iOS). Daily account spend went from about ₹1,100 to
+about ₹12,000. The prepaid balance has been topped up ₹70,000 at a time (7, 12 and 17 Oct)
+— keep watching it, because a stall still looks like a cheap day in the tables.
+
+**Ten new creatives, `E3-01` to `E3-10`, went live on 3 Oct** (the `ad-thumbs/elixir3/`
+covers belong to these). They are cheaper as well as bigger: 4–19 Oct took 8,923
+registrations on ₹1,93,644.84, **₹21.70 each**, against ₹41.89 over 23–28 Sep under the old
+₹1,000 cap. `E3-08a 3 medical apps to 1` is the largest ad on the account (₹1,15,856.78) and
+the cheapest at scale (₹21.26); `E3-09` ₹22.32 and `E3-10` ₹22.97. `E3-06` was archived
+after ₹107.70.
+
+**`v5 - I am a med student` has been ARCHIVED** at ₹54,351.01 / 1,734 registrations
+(₹31.34). It is kept in `ADS` because it still carries spend.
+**Archived ads are not returned by an unfiltered ad-level listing** — the first pull of this
+refresh came up ₹64,919.67 short of the campaign total until `effective_status IN
+["ARCHIVED","DELETED"]` was added. Pull both, every refresh, exactly as `halcyon-reports`
+does for campaigns. Archived ads with no spend are still left out of `ADS`.
+
+**A PAUSED ad can still have spent today.** On 20 Oct `E3-08a`, `E3-09` and `E3-10` all read
+PAUSED yet all three booked spend that morning, and a new ad `influencer - 20oct` started the
+same day. Re-pull the days; never infer a stop from a status.
+
+## September 2026, for the record (superseded by the October regime above)
 
 **Budgets were cut on 27 Sep 2026 at 7:36 am** — both campaigns went from ₹3,000/day to
 ₹1,000/day (activity log, Power Editor, actor Abhijeet Lenka), so the account cap fell
@@ -64,8 +93,8 @@ resumed in the 9 pm hour, right after ₹30,000 was added to the prepaid balance
 (activity log, "Money added to balance"). Watch the balance: a stall like that looks
 like a cheap day in the tables. At 7:34 am the influencer ad set `120249585873460482`
 also moved from "Automatically bid for actions" to "Optimize bid for actions" with a
-**₹19.00 bid cap**. Anything from 27 Sep onward is a different regime; do not read it
-against the ₹6,000/day days. `influencer - hasaan` was switched off in the main campaign
+**₹19.00 bid cap**. Anything from 27 Sep onward was a different regime; do not read it
+against the ₹6,000/day days — and from 3 Oct the October budgets make it a third one. `influencer - hasaan` was switched off in the main campaign
 at 9:25 pm on 26 Sep and is now PAUSED in `ADS`.
 
 The page carries `noindex, nofollow` so it stays out of search results.
