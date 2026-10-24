@@ -2,10 +2,94 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 September 2026, 11:00 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 24 October 2026, 8:10 am IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
   Defaults to the campaigns that are active; a switch shows all nine.
+
+## Snapshot: 24 Oct 2026, 8:10 am IST
+
+Covers **31 Jul – 24 Oct 2026** (86 delivering days). 24 October is a part-day and is
+held out of every headline.
+
+| | Active only (1 campaign) | All nine campaigns |
+|---|---|---|
+| Media spend | ₹3,16,510.90 | ₹3,89,071.55 |
+| Billed incl. 18% GST | **₹3,73,482.86** | ₹4,59,104.43 |
+| Installs | 29,959 (₹10.56) | 32,936 (₹11.81) |
+| Registrations | 13,744 (**₹23.03**) | 14,779 (₹26.33) |
+
+**The account scaled hard since the 29 September snapshot, and got cheaper doing it.**
+`India | MBBS Students - Doctors | App Downloads | signups` went from ₹89,452 to
+₹3,16,511; the **₹2,27,059 of new spend bought 11,024 registrations at ₹20.60**, against
+the ₹32.89 it had averaged to 29 September. Daily spend went from about ₹1,100 on
+30 September to ₹14,846 on 4 October, held ₹8,600–13,500 a day for a fortnight, and has
+eased to ₹4,500–7,800 over 20–23 October. It is now the **only** ACTIVE campaign on the
+account.
+
+**Thirteen new ads opened on 3 October** — the eleven `E3-` creatives plus
+`influencer - 20oct` and `influencer 20oct – Copy`. `E3-08a 3 medical apps to 1` alone
+carries ₹1,18,942 (38% of the campaign) at ₹20.91 a registration;
+`influencer 20oct – Copy` is the cheapest line on the account at **₹12.84**.
+
+**The rename check came back clean this time.** `ads_account_get_activity_logs`
+(`event_category: "ad"`) records all thirteen as *Ad created*, with **no `Ad name updated`
+and no `Ad updated` creative swap** anywhere in the window. So nothing was split, the
+thirteen names were **appended** to `ANAME` at indexes 8–20 and every historical `ADAY`
+row still points at the creative that earned it. The two 22 September swaps stay split
+exactly as they were.
+
+**The last three days are the cheapest of the whole run** — ₹12.42, ₹10.23 and ₹12.54 a
+registration on 21–23 October against ₹17–29 through the first three weeks. The page's
+own creative split attributes it rather than guessing: `influencer 20oct – Copy` took
+**0% of the spend in the preceding window and 74% in this one**, at ₹12.76 a
+registration. Those are also the lowest-spend days of the run and 23 October is still
+inside the ~48 hours Meta revises, so the exact figures are provisional — but the
+direction is a creative that is working, not an artefact.
+
+**`India | MBBS Students - influencers` is finished.** It stopped spending after
+3 October and now reads PAUSED, closing at ₹7,700.08 for 386 installs and 160
+registrations. The ₹6,000/day → ₹2,000/day budget cut of 27 Sep (below) no longer binds:
+the surviving campaign carries the whole account.
+
+### Reconciliation for this snapshot
+
+Everything closes to the paisa except four known items, all small and all expected:
+
+| Check | Result |
+|---|---|
+| `ADS` sums vs `CAMP`, all nine campaigns | **exact** on spend, impressions, clicks, installs, registrations |
+| `DAILY` sums vs `CAMP` | exact except campaign 5: **registrations 13,743 vs 13,744** (−1) |
+| `AGE` sums vs `CAMP` | campaign 5 **+₹10.72 / +317 impressions / +2 clicks**; campaign 0 **−1 registration** |
+| `ADAY` sums vs `DAILY`, per campaign per day | exact on installs and registrations on **every** day; spend differs only on 10‑23 (+₹0.05) and the part-day 10‑24 (+₹10.67 / +314 impressions) |
+
+The age-band and part-day drift is Meta's own breakdown rounding and the live day still
+filling. A single registration falling between the period total and the day rows is
+late attribution at a day boundary. Nothing here needed a correction — but if any of
+these grows past a few rupees or a couple of results, stop and find out why before
+publishing.
+
+## `date_preset: "maximum"` under-reports — use an explicit `time_range`
+
+**This cost an afternoon on 24 Oct 2026.** Campaign 5's day rows summed to ₹10.26 *more*
+than its own lifetime total, which looks like a data error and is not: `date_preset:
+"maximum"` returned a smaller lifetime figure than the days it is supposed to contain.
+An explicit `time_range` of `2026-07-31 .. 2026-10-24` returns
+**₹3,16,510.90 / 7,304,046 impressions / 63,454 clicks**, which equals the sum of the day
+rows exactly.
+
+So: **pull `CAMP`, `ADS` and `AGE` with an explicit `time_range` spanning the whole run,
+not `date_preset: "maximum"`.** Extend the end date every refresh.
+
+## Archived and deleted ads are missing from the default ad listing
+
+The ad-level pull returned four fewer ads than the account has, and `ADS` summed
+**₹65,551.01 short** of `CAMP` — on paused campaigns, so no live number was wrong, but
+the leaderboard was quietly incomplete. The default listing omits ARCHIVED and DELETED
+objects. Re-pull ad level with an explicit
+`filtering` on `effective_status IN [ACTIVE, PAUSED, ADSET_PAUSED, CAMPAIGN_PAUSED, ARCHIVED, DELETED, …]`
+and the sums close to the paisa. `ADS` currently carries statuses ACTIVE, PAUSED,
+ADSET_PAUSED, CAMPAIGN_PAUSED, ARCHIVED and the report's own `REPLACED`.
 
 **"The last 10 days"** sits at the top of the all-campaigns view. It rolls `DAILY`
 up across whichever campaigns are in scope and shows spend, impressions, CPM, CTR,
@@ -27,13 +111,14 @@ Two more rules, both about not letting a bad day set a number:
   labelled *part day so far*, but it is out of the total and every rate beside it,
   and the total row says how many settled days it covers and which day it dropped.
   Meta revises the last two days all day; without this the window's cost per
-  registration moved between one rebuild and the next.
+  registration moved between one rebuild and the next. At this snapshot it reads
+  *9 settled days — 24 Oct excluded*, ₹83,409.95 for 4,074 registrations (₹20.47).
 - **The "cheapest day" footnote ignores days that barely spent.** A throttled or
   near-dead day still books registrations earned by the days before it, so its cost
   per registration is both meaningless and unbeatable. Only days carrying at least
   half the window's average settled spend are eligible. Before this guard the
-  footnote named 21 Sep at Rs 17.88 — a suppressed-delivery day that took Rs 733 on
-  13,898 impressions against the Rs 3,000-4,000 either side of it — which is not a
+  footnote named 21 Sep at ₹17.88 — a suppressed-delivery day that took ₹733 on
+  13,898 impressions against the ₹3,000-4,000 either side of it — which is not a
   bar any normal day can clear.
 
 **"Why the cost per registration moved"** sits on each campaign. Cost per registration is
@@ -47,11 +132,12 @@ That split reads `ADAY`, ad-level day rows for the campaigns that are still runn
 by `ANAME`. **`ADAY` has to be refreshed alongside `DAILY`** or the split silently goes stale
 while the charts above it move.
 
+## History worth keeping
+
 A second live campaign, **India | MBBS Students - influencers** (`120249585873390482`),
 opened on 24 Sep 2026 on its own ₹3,000/day budget alongside the original ₹3,000/day
-campaign. Account spend roughly doubled that day — that is a deliberate second campaign,
-not a budget change on the first. It runs the same three influencer creatives, and so far
-only `Influencer - 11sep` has any real delivery in it.
+campaign. Account spend roughly doubled that day — that was a deliberate second campaign,
+not a budget change on the first. It last spent on 3 Oct 2026 and is now PAUSED.
 
 **Budgets were cut on 27 Sep 2026 at 7:36 am** — both campaigns went from ₹3,000/day to
 ₹1,000/day (activity log, Power Editor, actor Abhijeet Lenka), so the account cap fell
@@ -64,9 +150,10 @@ resumed in the 9 pm hour, right after ₹30,000 was added to the prepaid balance
 (activity log, "Money added to balance"). Watch the balance: a stall like that looks
 like a cheap day in the tables. At 7:34 am the influencer ad set `120249585873460482`
 also moved from "Automatically bid for actions" to "Optimize bid for actions" with a
-**₹19.00 bid cap**. Anything from 27 Sep onward is a different regime; do not read it
-against the ₹6,000/day days. `influencer - hasaan` was switched off in the main campaign
-at 9:25 pm on 26 Sep and is now PAUSED in `ADS`.
+**₹19.00 bid cap**. The cap no longer binds — spend ran to ₹14,846 on 4 October — so do
+not read the ₹6,000/day-era days, the ₹2,000/day week, and the October scale-up as one
+regime. `influencer - hasaan` was switched off in the main campaign at 9:25 pm on
+26 Sep and is still PAUSED in `ADS`.
 
 The page carries `noindex, nofollow` so it stays out of search results.
 
@@ -100,6 +187,29 @@ split the ad into two rows at the swap date:
 and **append** the new names to `ANAME` while restoring the old names at their
 original indexes — every historical `ADAY` row still points at the creative that
 actually ran.
+
+**A pure rename is handled differently from a new creative.** If a name changed but the
+creative did not, rename `ANAME` **in place** so past `ADAY` rows keep their creative —
+never reorder `ANAME`, and only a genuinely new creative gets appended to the end.
+
+## Refreshing it
+
+- The snapshot timestamp appears **four times in `index.html`** — the `<!-- Standalone
+  snapshot -->` comment in `<head>`, the masthead `.stamp`, the account line in the
+  masthead prose, and the `Snapshot data` comment above the arrays — and **once here**.
+  Move all five.
+- Set `SNAP_DAY` to the still-running day. The page gives it its own row, labels it
+  *part day so far*, and keeps it out of every headline and every window total.
+- **Never reshuffle `CID`.** `CAMP`, `ADS`, `DAILY` and `AGE` all carry an index into it.
+  New campaigns are appended to the end.
+- Everything except `DAILY` and `ADAY` is lifetime (pulled with an explicit `time_range`,
+  see above). `DAILY` is per campaign per day with dates as `"MM-DD"` and `YEAR`
+  prefixed; `ADAY` is per ad per campaign per day, same date form.
+- Ad-level insights do **not** return `campaign_id` unless it is requested by name.
+- Re-sort `ADS` descending by spend after patching, and assert the sort. Do **not**
+  sort `ANAME` — `ADAY` indexes into it positionally.
+- Metrics are `mobile_app_install` and `omni_complete_registration` at campaign and day
+  level; ads also carry `link_click`.
 
 ## Campaigns not in the report
 
