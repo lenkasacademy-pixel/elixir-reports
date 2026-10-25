@@ -2,10 +2,55 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 September 2026, 11:00 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 25 October 2026, 8:40 am IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
   Defaults to the campaigns that are active; a switch shows all nine.
+
+## Where the account stands — 25 October 2026
+
+**The account has scaled hard and is now effectively one campaign.** Lifetime media spend is
+**₹3,89,864.38** (₹4,60,039.97 billed with GST) for **33,107 installs and 14,930
+registrations**, ₹26.11 each. It has spent **₹2,27,994.18 in the twenty-six days since the
+last snapshot** — more than in the whole two months before it — and 81% of lifetime spend
+now sits in one campaign, `India | MBBS Students - Doctors | App Downloads | signups`
+(₹3,17,303.73, 13,895 registrations, **₹22.84 each**).
+
+Daily spend ran at ₹11,000–₹14,000 from 4 to 19 October, peaking at **₹14,846.11 on the
+4th**, against the ₹2,000/day cap that was in force in late September. Whoever lifted that
+cap did not log it in the activity log; the budget note below describes the old regime and
+is kept for the record.
+
+**Eleven new creatives, the `E3` series, went live on 3 October**, and two more
+(`influencer - 20oct`, `influencer 20oct – Copy`) on the 20th. Between them they have taken
+₹2,22,393.56 — 57% of lifetime account spend — and they are what the scale-up is made of:
+
+| Creative | Spend | Registrations | Cost per registration |
+|---|---|---|---|
+| `E3-08a 3 medical apps to 1` | ₹1,19,086.22 | 5,718 | ₹20.83 |
+| `E3-09 Asking medicos which AI app they trust` | ₹52,326.38 | 2,388 | ₹21.91 |
+| `E3-10 Rounds with the strictest senior` | ₹28,758.33 | 1,268 | ₹22.68 |
+| `influencer 20oct – Copy` | ₹19,047.89 | 1,550 | **₹12.29** |
+| `v5 - I am a med student` (now archived) | ₹54,351.01 | 1,734 | ₹31.34 |
+
+`influencer 20oct – Copy` is the cheapest registration the account has ever bought and has
+five days of data. `E3-08a` is the workhorse. The other eight `E3` creatives have taken
+₹2,543.40 between them — about 1% of the series — and have not been given a real test.
+
+**`India | MBBS Students - influencers` is finished.** It last spent on 3 October and is
+PAUSED at ₹7,700.08 for 160 registrations (₹48.13 each) — roughly twice the cost of the
+main campaign. Its `ADAY` rows stop where its delivery did.
+
+**Watch the tail.** Spend fell to ₹1,560.94 on 24 October from ₹4,642.67 on the 23rd, and
+nothing at all had been billed on the 25th when this snapshot was taken (6 installs and 12
+registrations came in on late attribution). That is either a deliberate wind-down or a
+balance/cap problem, and the activity log says nothing either way.
+
+**No rename or creative swap happened in this period.** Every name in `ANAME` 0–7 still
+resolves: the two that no longer appear in Meta's ad list, `v4 - Ecg` and
+`v1 - male ( asking medicos how they study)`, are the already-split `REPLACED` halves of the
+22 September swap documented below, not new disappearances. Thirteen names were **appended**
+to `ANAME`; none was reordered.
 
 **"The last 10 days"** sits at the top of the all-campaigns view. It rolls `DAILY`
 up across whichever campaigns are in scope and shows spend, impressions, CPM, CTR,
@@ -47,6 +92,9 @@ That split reads `ADAY`, ad-level day rows for the campaigns that are still runn
 by `ANAME`. **`ADAY` has to be refreshed alongside `DAILY`** or the split silently goes stale
 while the charts above it move.
 
+**The paragraphs below describe the late-September regime and are kept for the record — the
+budgets they refer to were lifted at some point in early October.**
+
 A second live campaign, **India | MBBS Students - influencers** (`120249585873390482`),
 opened on 24 Sep 2026 on its own ₹3,000/day budget alongside the original ₹3,000/day
 campaign. Account spend roughly doubled that day — that is a deliberate second campaign,
@@ -69,6 +117,10 @@ against the ₹6,000/day days. `influencer - hasaan` was switched off in the mai
 at 9:25 pm on 26 Sep and is now PAUSED in `ADS`.
 
 The page carries `noindex, nofollow` so it stays out of search results.
+
+`SNAP_DAY` is `2026-10-25` and the snapshot stamp reads 25 Oct 2026, 8:40 am IST in
+**four** places in `index.html` (the head comment, the masthead stamp, the footnote and the
+data-block comment) and once here.
 
 A live version of the same report — one that queries Meta each time it is opened — is kept
 as a private Claude artifact rather than here.
@@ -100,6 +152,16 @@ split the ad into two rows at the swap date:
 and **append** the new names to `ANAME` while restoring the old names at their
 original indexes — every historical `ADAY` row still points at the creative that
 actually ran.
+
+**How the split is maintained on each refresh.** Do not carry the published halves forward
+by hand. Re-pull the ad **ranged from the swap day** (`time_range` since 2026-09-23 for both
+of these) — that is the live creative's row, including its own de-duplicated reach — and set
+the `REPLACED` row to *lifetime minus ranged* on spend, impressions, clicks, link clicks,
+installs and registrations, keeping its reach frozen at the value from its own ranged pull
+when the window closed. Meta revises both halves: on the 25 Oct refresh the Rheumatoid
+Arthritis ad's lifetime rose ₹3.97 while its ranged half fell ₹2.66, so the retired half
+absorbed ₹6.63. Subtracting keeps the two rows summing to the ad's lifetime, which is what
+the campaign reconciliation checks.
 
 ## Campaigns not in the report
 
