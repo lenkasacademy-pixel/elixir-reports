@@ -2,7 +2,7 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 September 2026, 11:00 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 26 October 2026, 8:20 am IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
   Defaults to the campaigns that are active; a switch shows all nine.
@@ -47,11 +47,59 @@ That split reads `ADAY`, ad-level day rows for the campaigns that are still runn
 by `ANAME`. **`ADAY` has to be refreshed alongside `DAILY`** or the split silently goes stale
 while the charts above it move.
 
-A second live campaign, **India | MBBS Students - influencers** (`120249585873390482`),
-opened on 24 Sep 2026 on its own ₹3,000/day budget alongside the original ₹3,000/day
-campaign. Account spend roughly doubled that day — that is a deliberate second campaign,
-not a budget change on the first. It runs the same three influencer creatives, and so far
-only `Influencer - 11sep` has any real delivery in it.
+## October 2026: one campaign, scaled up and back down
+
+**Only `India | MBBS Students - Doctors | App Downloads | signups` (`120249183882130482`)
+is still delivering.** The second campaign, **India | MBBS Students - influencers**
+(`120249585873390482`), opened 24 Sep on its own ₹3,000/day budget, tailed off through
+1–3 Oct and now reads PAUSED. It closes at ₹7,700.08 / 386 installs / 160 registrations.
+
+**The live campaign's daily budget moved three times** (activity log, `budget` category,
+actor Abhijeet Lenka):
+
+| When | Budget |
+|---|---|
+| 3 Oct, 11:07 am | ₹1,000 → **₹8,000**/day (via `ads MCP server`) |
+| 4 Oct, 12:10 pm | ₹8,000 → **₹12,000**/day (Ads Manager iOS) |
+| 20 Oct, 10:14 am | ₹12,000 → **₹6,000**/day (Ads Manager iOS) |
+
+So the day series runs ~₹1,100/day to 2 Oct, ₹12,000–13,500/day from the 4th to the 19th,
+and ₹4,500–7,800/day since. **Anything from 3 Oct onward is a different regime** — do not
+read it against the ₹1,000/day days before it, and do not read the September ₹6,000/day
+cap notes below as current.
+
+**Thirteen new ads were created**, all genuinely new creatives (no renames, no creative
+swaps — `ads_account_get_activity_logs` with `event_category: "ad"` shows 13 `Ad created`
+events and **no** `Ad name updated` or `Ad updated`): `E3-01` … `E3-10` on 3 Oct, and
+`influencer - 20oct` plus `influencer 20oct – Copy` on 20 Oct. `E3-08a 3 medical apps to 1`
+is now the largest line on the account at ₹1,20,086.31. `E3-06` and `influencer - 20oct`
+have since been archived.
+
+## ARCHIVED ads are hidden from an unfiltered ad-level read
+
+**This cost a reconciliation gap on the 26 Oct refresh.** An ad-level pull with no
+`filtering` returned ₹65,551.01 less than the campaign totals, and `v5 - I am a med
+student` — ₹54,351.01 of lifetime spend — had vanished from the list entirely. It had not
+been renamed and its creative had not been swapped: it was simply **ARCHIVED**, and an
+unfiltered listing omits archived ads exactly as it omits archived campaigns in
+`halcyon-reports`. Always pass
+`filtering: [{field: "effective_status", operator: "IN", value: ["ACTIVE","PAUSED","DELETED","ARCHIVED","CAMPAIGN_PAUSED","ADSET_PAUSED", …]}]`
+on the ad-level read, and check the ad sums against `CAMP` before believing a missing name
+is a rename. A vanished name is an archived ad far more often than it is a rename.
+
+## Read lifetime and day-by-day in ONE batch
+
+`CAMP`, `ADS` and `AGE` are lifetime reads; `DAILY` and `ADAY` are day reads. While a
+campaign is still delivering **each separate API call sees a bigger part-day than the
+last**, so mixing calls taken minutes apart breaks the reconciliation asserts. On this
+refresh the live campaign's part-day grew ₹0.19 → ₹0.36 → ₹13.53 across successive reads,
+and the age breakdown looked 6 installs / 3 registrations short until `CAMP` and `AGE` were
+re-read in the same batch — after which they agreed exactly. **Issue the lifetime reads
+(campaign + ad + age) as parallel calls in one batch**, and the same for any day rows you
+intend to assert against each other. Residual drift between the lifetime batch and the day
+batch lands entirely on `SNAP_DAY`, which is excluded from every headline anyway.
+
+### September 2026 (historical — superseded by the October regime above)
 
 **Budgets were cut on 27 Sep 2026 at 7:36 am** — both campaigns went from ₹3,000/day to
 ₹1,000/day (activity log, Power Editor, actor Abhijeet Lenka), so the account cap fell
