@@ -2,7 +2,7 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 September 2026, 11:00 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 October 2026, 8:20 am IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
   Defaults to the campaigns that are active; a switch shows all nine.
@@ -47,31 +47,92 @@ That split reads `ADAY`, ad-level day rows for the campaigns that are still runn
 by `ANAME`. **`ADAY` has to be refreshed alongside `DAILY`** or the split silently goes stale
 while the charts above it move.
 
-A second live campaign, **India | MBBS Students - influencers** (`120249585873390482`),
-opened on 24 Sep 2026 on its own ₹3,000/day budget alongside the original ₹3,000/day
-campaign. Account spend roughly doubled that day — that is a deliberate second campaign,
-not a budget change on the first. It runs the same three influencer creatives, and so far
-only `Influencer - 11sep` has any real delivery in it.
+**October was a different account.** The signups campaign
+(`120249183882130482`) is the only one still spending, and its daily budget was moved
+three times (activity log, actor Abhijeet Lenka):
 
-**Budgets were cut on 27 Sep 2026 at 7:36 am** — both campaigns went from ₹3,000/day to
-₹1,000/day (activity log, Power Editor, actor Abhijeet Lenka), so the account cap fell
-from ₹6,000/day to ₹2,000/day. **The first day under the cap was the cheapest normal day
-in a fortnight**: 27 Sep settled at ₹1,939.44 for 64 registrations, ₹30.30 each, against
-₹41.74 on the 26th at three times the spend. **28 Sep is not a fair comparison**: it
-spent only ₹709.48 (31 registrations, ₹22.89 each) because delivery thinned all day and
-all but stopped from 3 pm to 9 pm (₹2.74 across those six hours, hourly breakdown). It
-resumed in the 9 pm hour, right after ₹30,000 was added to the prepaid balance at 9:32 pm
-(activity log, "Money added to balance"). Watch the balance: a stall like that looks
-like a cheap day in the tables. At 7:34 am the influencer ad set `120249585873460482`
-also moved from "Automatically bid for actions" to "Optimize bid for actions" with a
-**₹19.00 bid cap**. Anything from 27 Sep onward is a different regime; do not read it
-against the ₹6,000/day days. `influencer - hasaan` was switched off in the main campaign
-at 9:25 pm on 26 Sep and is now PAUSED in `ADS`.
+| When | Budget | Via |
+|---|---|---|
+| 3 Oct, 11:07 am | ₹1,000 → **₹8,000**/day | ads MCP server |
+| 4 Oct, 12:10 pm | ₹8,000 → **₹12,000**/day | Ads Manager App for iOS |
+| 20 Oct, 10:14 am | ₹12,000 → **₹6,000**/day | Ads Manager App for iOS |
+
+Daily spend followed it exactly: ~₹1,100/day to 2 Oct, ₹4,617 on the 3rd (a part-day
+at the new budget), ₹12,000–₹13,500 from the 4th to the 19th, and ₹4,500–₹7,800
+since the 20th. **Do not read any rate across those lines without saying which budget
+was in force.** Balance top-ups of ₹70,000 landed on 7, 12, 17 and 25 Oct (₹30,000
+on the 4th); a stall in delivery is worth checking against the balance before it is
+read as a cheap day.
+
+**Scaling 12x did not cost what it usually does.** The campaign's lifetime cost per
+registration is **₹22.22** (₹3,40,990.09 for 15,345 registrations). October's settled
+days (1–28 Oct) ran at **₹19.86** on ₹2,49,320.83 for 12,555 registrations — cheaper
+than the lifetime average and cheaper than the ₹30.30 benchmark day of 27 Sep that
+the last cut was built around. The account's lifetime spend is now ₹4,13,550.74,
+₹3,40,990.09 of it on this one campaign.
+
+**The creative roster was replaced.** Ten new `E3-*` creatives and three new
+`influencer` cuts ran in October and now carry most of the campaign. The order of
+`ANAME` is unchanged and the fourteen new names are **appended** (indexes 8–21), so
+every historical `ADAY` row still points at the creative that actually ran.
+
+| Creative | Spend | Registrations | Each |
+|---|---|---|---|
+| `E3-08a 3 medical apps to 1` | ₹1,23,614.31 | 5,962 | ₹20.73 |
+| `E3-09 Asking medicos which AI app they trust` | ₹53,243.60 | 2,446 | ₹21.77 |
+| `influencer 20oct – Copy` | ₹35,425.33 | 2,620 | **₹13.52** |
+| `E3-10 Rounds with the strictest senior` | ₹29,495.14 | 1,318 | ₹22.38 |
+| `v5 - I am a med student` (ARCHIVED) | ₹54,351.01 | 1,734 | ₹31.34 |
+
+`influencer 20oct – Copy` is the standout and is **still ACTIVE** — ₹13.52 a
+registration against ₹20–₹22 for the `E3` series. `v5 - I am a med student`, the
+previous top creative, is archived and closed at ₹31.34.
+
+**The influencers campaign (`120249585873390482`) is finished.** It last spent on
+3 October (₹2.51), booked one late-attributed install and registration on the 4th,
+and now reads PAUSED at ₹7,700.08 for 160 registrations (₹48.13 each) — roughly twice
+the signups campaign's rate. `influencer - hasaan` and `influencer direct video ad`
+never moved past a few rupees inside it.
 
 The page carries `noindex, nofollow` so it stays out of search results.
 
 A live version of the same report — one that queries Meta each time it is opened — is kept
 as a private Claude artifact rather than here.
+
+## An unfiltered ad-level read silently drops archived creatives
+
+**This bit the report on 29 October 2026, and it is worth ₹65,551.01.** An
+`ads_get_ad_entities` call at `level: "ad"` with no `effective_status` filter returned
+16 ads for the signups campaign. They summed to ₹2,75,439.08 against a campaign total
+of ₹3,40,990.09 — **₹65,551.01 short**. Nothing in the response said anything was
+missing, and the page would have shown a creative table that did not add up to its own
+campaign header.
+
+The missing rows were **ARCHIVED**, and archived ads are not returned by an unfiltered
+ad listing any more than archived campaigns are by an unfiltered campaign listing:
+
+| Ad | Status | Spend |
+|---|---|---|
+| `v5 - I am a med student` | ARCHIVED | ₹54,351.01 |
+| `influencer direct video ad - Rheumatoid Arthritis` | ARCHIVED | ₹10,460.96 |
+| `influencer - 20oct` | ARCHIVED | ₹631.34 |
+| `E3-06 My entire AI stack` | ARCHIVED | ₹107.70 |
+
+**Always pass the status filter at ad level, not just at campaign level:**
+
+    filtering: [{"field": "campaign.id",      "operator": "IN", "value": ["<id>"]},
+                {"field": "effective_status", "operator": "IN",
+                 "value": ["ACTIVE","PAUSED","ARCHIVED","DELETED","CAMPAIGN_PAUSED",
+                           "ADSET_PAUSED","PENDING_REVIEW","DISAPPROVED","WITH_ISSUES",
+                           "IN_PROCESS"]}]
+
+With the filter the 22 ads sum to ₹3,40,990.09 — the campaign total, to the paisa.
+**The reconciliation is what caught this**, which is the whole reason it is not
+optional: `CAMP` totals must equal the sums of `ADS`, `DAILY` and `AGE`, and a
+shortfall that large can only be missing rows. Note also that `object_ids` at
+`level: "ad"` must be *ad* ids — passing a campaign id returns an empty list and a
+quiet note in `additional_info`, which is another way to end up with no rows and no
+error.
 
 ## A rename can hide a creative swap — check the activity log
 
