@@ -2,10 +2,11 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 September 2026, 11:00 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 30 October 2026, 8:15 am IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
   Defaults to the campaigns that are active; a switch shows all nine.
+  One campaign is active as of this snapshot.
 
 **"The last 10 days"** sits at the top of the all-campaigns view. It rolls `DAILY`
 up across whichever campaigns are in scope and shows spend, impressions, CPM, CTR,
@@ -47,26 +48,43 @@ That split reads `ADAY`, ad-level day rows for the campaigns that are still runn
 by `ANAME`. **`ADAY` has to be refreshed alongside `DAILY`** or the split silently goes stale
 while the charts above it move.
 
-A second live campaign, **India | MBBS Students - influencers** (`120249585873390482`),
-opened on 24 Sep 2026 on its own ₹3,000/day budget alongside the original ₹3,000/day
-campaign. Account spend roughly doubled that day — that is a deliberate second campaign,
-not a budget change on the first. It runs the same three influencer creatives, and so far
-only `Influencer - 11sep` has any real delivery in it.
+**October was a deliberate ten-fold scale-up of one campaign**, and it got cheaper
+rather than dearer. `India | MBBS Students - Doctors | App Downloads | signups`
+(`120249183882130482`) is the only campaign still running. Its daily budget went
+**₹1,000 → ₹8,000 at 11:07 am on 3 Oct**, **→ ₹12,000 on 4 Oct at 12:10 pm**, and
+**→ ₹6,000 at 10:14 am on 20 Oct** (activity log, `event_category: "budget"`, actor
+Abhijeet Lenka — the first change through the ads MCP server, the other two through
+Ads Manager for iOS). The prepaid balance was topped up ₹30,000 on 4 Oct and ₹70,000
+on each of the 7th, 12th, 17th and 25th.
 
-**Budgets were cut on 27 Sep 2026 at 7:36 am** — both campaigns went from ₹3,000/day to
-₹1,000/day (activity log, Power Editor, actor Abhijeet Lenka), so the account cap fell
-from ₹6,000/day to ₹2,000/day. **The first day under the cap was the cheapest normal day
-in a fortnight**: 27 Sep settled at ₹1,939.44 for 64 registrations, ₹30.30 each, against
-₹41.74 on the 26th at three times the spend. **28 Sep is not a fair comparison**: it
-spent only ₹709.48 (31 registrations, ₹22.89 each) because delivery thinned all day and
-all but stopped from 3 pm to 9 pm (₹2.74 across those six hours, hourly breakdown). It
-resumed in the 9 pm hour, right after ₹30,000 was added to the prepaid balance at 9:32 pm
-(activity log, "Money added to balance"). Watch the balance: a stall like that looks
-like a cheap day in the tables. At 7:34 am the influencer ad set `120249585873460482`
-also moved from "Automatically bid for actions" to "Optimize bid for actions" with a
-**₹19.00 bid cap**. Anything from 27 Sep onward is a different regime; do not read it
-against the ₹6,000/day days. `influencer - hasaan` was switched off in the main campaign
-at 9:25 pm on 26 Sep and is now PAUSED in `ADS`.
+| | spend | registrations | cost per registration |
+|---|---|---|---|
+| everything to 30 Sep | ₹91,082.08 | 2,761 | ₹32.99 |
+| **1–29 Oct (settled)** | **₹2,54,564.14** | **12,774** | **₹19.93** |
+
+Cost per install fell with it, to ₹9.64 over 1–29 Oct. The biggest single day was
+**4 Oct: ₹14,846.11 for 850 registrations**.
+
+**The cause is a new creative batch.** Ten ads named `E3-01` … `E3-10` were created on
+**3 Oct at ~11:58 am** and went live that afternoon (activity log, `Ad created`).
+`E3-08a 3 medical apps to 1` is now the **largest single ad the account has ever run**
+— ₹1,23,614.33 at ₹20.72 a registration. `influencer 20oct – Copy`, created 20 Oct,
+is the cheapest line of any size at **₹14.15**, and is the one still carrying most of
+the spend. `influencer 27oct` was added on 28 Oct and has ₹2,311.03 so far.
+
+**Two ads were deleted on 15 Oct at 7:39 am** — `v5 - I am a med student`, the previous
+mainstay (₹54,351.01 lifetime, ₹31.34 a registration), and `E3-06 My entire AI stack`.
+Meta reports deleted ads as `ARCHIVED` and still returns their figures, so they are kept
+in `ADS` with their final numbers. **They are only returned when the ad-level query
+filters `effective_status` to include `ARCHIVED`/`DELETED`** — without that filter
+campaign 5's ad rows came up ₹65,551.01 short of its own total. Same trap as the
+archived *campaign* in `halcyon-reports`; it applies at ad level too.
+
+**The influencer campaign is finished.** `India | MBBS Students - influencers`
+(`120249585873390482`) is PAUSED and closed at **₹7,700.08 for 160 registrations,
+₹48.13 each** — more than twice the October rate of the campaign that replaced its
+budget. Its last delivery was 3 Oct, with one late-attributed install and registration
+landing on 4 Oct.
 
 The page carries `noindex, nofollow` so it stays out of search results.
 
@@ -89,6 +107,15 @@ records all three events together:
     Ad updated        old_value ["2154354885490353"] -> new_value ["956543453540710"]
     Ad name updated   "v4 - Ecg" -> "influencer direct video ad - Rheumatoid Arthritis"
     Ad status updated Inactive -> Pending Process -> Pending Review -> Active
+
+**Checked again on the 30 Oct refresh: no renames and no creative swaps.** The ad
+activity log for 28 Sep – 30 Oct carries no `Ad name updated` and no `Ad updated`
+event at all — only `Ad created`, `Ad status updated` and ad-review events. The
+arithmetic agrees: each of the six pre-October ad objects on campaign 5 still answers
+to the name the report already had for it, and both 22 Sep splits still reconcile to
+the paisa against their ad object's lifetime (₹10,361.32 + ₹99.64 = ₹10,460.96;
+₹1,076.22 + ₹413.03 = ₹1,489.25). Every `E3-*` and `influencer *oct` name is a
+genuinely new ad object and was **appended** to `ANAME`, which now has 22 entries.
 
 A pure rename never triggers Pending Review. **If a name changed, pull the
 activity log before carrying history forward.** If the creative changed too,
