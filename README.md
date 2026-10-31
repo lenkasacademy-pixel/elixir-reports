@@ -2,10 +2,11 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 September 2026, 11:00 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 31 October 2026, 11:50 am IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
-  Defaults to the campaigns that are active; a switch shows all nine.
+  Defaults to the campaigns that are active; a switch shows all nine. Only one is
+  active now, so the page opens on that campaign's own tab.
 
 **"The last 10 days"** sits at the top of the all-campaigns view. It rolls `DAILY`
 up across whichever campaigns are in scope and shows spend, impressions, CPM, CTR,
@@ -47,26 +48,103 @@ That split reads `ADAY`, ad-level day rows for the campaigns that are still runn
 by `ANAME`. **`ADAY` has to be refreshed alongside `DAILY`** or the split silently goes stale
 while the charts above it move.
 
-A second live campaign, **India | MBBS Students - influencers** (`120249585873390482`),
-opened on 24 Sep 2026 on its own ₹3,000/day budget alongside the original ₹3,000/day
-campaign. Account spend roughly doubled that day — that is a deliberate second campaign,
-not a budget change on the first. It runs the same three influencer creatives, and so far
-only `Influencer - 11sep` has any real delivery in it.
+## Where the account stands — 31 October 2026
 
-**Budgets were cut on 27 Sep 2026 at 7:36 am** — both campaigns went from ₹3,000/day to
-₹1,000/day (activity log, Power Editor, actor Abhijeet Lenka), so the account cap fell
-from ₹6,000/day to ₹2,000/day. **The first day under the cap was the cheapest normal day
-in a fortnight**: 27 Sep settled at ₹1,939.44 for 64 registrations, ₹30.30 each, against
-₹41.74 on the 26th at three times the spend. **28 Sep is not a fair comparison**: it
-spent only ₹709.48 (31 registrations, ₹22.89 each) because delivery thinned all day and
-all but stopped from 3 pm to 9 pm (₹2.74 across those six hours, hourly breakdown). It
-resumed in the 9 pm hour, right after ₹30,000 was added to the prepaid balance at 9:32 pm
-(activity log, "Money added to balance"). Watch the balance: a stall like that looks
-like a cheap day in the tables. At 7:34 am the influencer ad set `120249585873460482`
-also moved from "Automatically bid for actions" to "Optimize bid for actions" with a
-**₹19.00 bid cap**. Anything from 27 Sep onward is a different regime; do not read it
-against the ₹6,000/day days. `influencer - hasaan` was switched off in the main campaign
-at 9:25 pm on 26 Sep and is now PAUSED in `ADS`.
+**October was the account's biggest month by a long way.** ₹2,60,121 of the
+₹4,24,735 ever spent here — 61% of lifetime spend — and it bought 13,036
+registrations at **₹19.95** against September's ₹33.69. Installs cost ₹9.65 in
+October against ₹14.03 in September.
+
+**The ₹1,000-a-day cap set on 27 September did not last.** Daily spend ran at
+₹1,100 through 1–2 October, stepped to ₹4,617 on the 3rd and to **₹14,846 on the
+4th**, then held between ₹10,000 and ₹13,500 for a fortnight before easing to
+₹5,000–6,000 from the 24th. Nothing before 3 October is comparable with anything
+after it.
+
+**One campaign is doing all of it.** `India | MBBS Students - Doctors | App
+Downloads | signups` (`120249183882130482`) is the only ACTIVE campaign and now
+carries ₹3,52,174 of lifetime spend, 33,718 installs at ₹10.44 and 15,829
+registrations at ₹22.25. Because it is the *only* live campaign, the page's
+`autoTab()` now opens straight onto its tab rather than the all-campaigns view —
+the **"last 10 days" rollup is one click away** (the all-campaigns rail button),
+not on screen at load. That is existing behaviour, not a regression.
+
+`India | MBBS Students - influencers` (`120249585873390482`) is **PAUSED**. It
+last spent on 3 October and closes at ₹7,700.08 for 386 installs and 160
+registrations. `LIVE`-style narrative about "a second live campaign" no longer
+applies.
+
+**Ten new creatives were built on 3 October** (`E3-01` … `E3-10`) and two of them
+carry the month:
+
+| Ad | Spend | Regs | Per reg | Status |
+|---|---|---|---|---|
+| E3-08a 3 medical apps to 1 | ₹1,23,614 | 5,967 | ₹20.72 | PAUSED |
+| E3-09 Asking medicos which AI app they trust | ₹53,244 | 2,449 | ₹21.74 | PAUSED |
+| **influencer 20oct – Copy** | ₹43,975 | **3,001** | **₹14.65** | **ACTIVE** |
+| E3-10 Rounds with the strictest senior | ₹29,495 | 1,321 | ₹22.33 | PAUSED |
+| v5 - I am a med student | ₹54,351 | 1,734 | ₹31.34 | ARCHIVED |
+| influencer 27oct | ₹3,761 | 121 | ₹31.08 | ACTIVE |
+
+`E3-08a` is now the largest single ad the account has ever run. But the best rate
+of anything with real volume is **`influencer 20oct – Copy` at ₹14.65 a
+registration**, and it is still live — worth saying to the client before the
+budget moves anywhere else. The other seven E3 creatives took ₹1,588 between
+them and remain untested rather than beaten.
+
+## A deleted ad disappears from the listing but keeps its spend
+
+**This is the sibling of the archived-campaign trap in `halcyon-reports`, one
+level down.** Two ads were deleted at Meta during October:
+
+- `v5 - I am a med student` (`120249226764800482`) on **15 Oct**
+- `influencer direct video ad - Rheumatoid Arthritis` (`120249212142170482`) on **20 Oct**
+
+An unfiltered `level: "ad"` listing **does not return them**, but their spend
+stays inside the campaign total — so `ADS` would have summed ₹65,000 short of
+`CAMP` with nothing obviously wrong on the page. Both are carried here with
+their full history and `effective_status` **ARCHIVED**, which is what Meta
+reports for them now.
+
+**Refetch deleted and archived ads by id.** Filter
+`effective_status IN [..., "ARCHIVED", "DELETED"]`, or pass the known ids in
+`object_ids` — the ids are in the activity log under *Ad status updated* with
+`new_value: "Deleted"`. The reconciliation assert is what catches this; do not
+skip it.
+
+**No ad was renamed this time.** `ads_account_get_activity_logs`
+(`event_category: "ad"`, from 28 Sep) returns 150 entries and **not one
+`Ad name updated`** — 14 `Ad created`, the rest status changes. So nothing in
+this report was relabelled, and the two 22 September splits stand exactly as
+published: `v4 — Ecg` and `v1 — male` keep everything up to the 21st, and the
+creatives that replaced them on the same ad ids carry only what they have earned
+since (`influencer direct video ad - Rheumatoid Arthritis` ₹99.64,
+`influencer - hasaan` ₹413.03, both unchanged in rate because neither has really
+run).
+
+## Reconciliation at this refresh
+
+Every campaign's `CAMP` row equals the sums of its `ADS`, `DAILY` and `AGE` rows
+exactly, **except the one live campaign**, where:
+
+- `DAILY` and `AGE` sum to ₹3,52,188.16 against `CAMP`'s ₹3,52,174.35 — **+₹13.81
+  and +381 impressions**, 0.004% of the total, Meta's own day/age breakdown
+  rounding over 63 days plus a still-settling tail.
+- `ADS` matches on spend and impressions to the paisa, and is 2 installs and 1
+  registration over.
+- The account-level lifetime read (₹4,24,763.57 / 1,01,70,752 impressions) sits
+  **+₹28.57 and +793 impressions** above the sum of the campaign reads — the same
+  part-day movement between two calls that this README has recorded before.
+
+`ADAY` equals `DAILY` per campaign per day on spend, installs **and**
+registrations for **every** day in the window, the part-day included. `ADS` is
+sorted by spend descending. `ANAME` grew 8 → 22 by appending only; `CID` is
+untouched; the last `DAILY` day is `SNAP_DAY`.
+
+**One pre-existing discrepancy, unchanged and not introduced here:** campaign 0
+(`India | MBBS Students | ios`, PAUSED since August) has 183 registrations across
+its `AGE` rows against `CAMP`'s 184. It has been that way since publication and
+the campaign has not spent since; it is Meta's own age-breakdown rounding.
 
 The page carries `noindex, nofollow` so it stays out of search results.
 
