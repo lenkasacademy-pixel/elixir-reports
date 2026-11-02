@@ -2,7 +2,7 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 September 2026, 11:00 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 2 November 2026, 8:20 am IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
   Defaults to the campaigns that are active; a switch shows all nine.
@@ -47,26 +47,38 @@ That split reads `ADAY`, ad-level day rows for the campaigns that are still runn
 by `ANAME`. **`ADAY` has to be refreshed alongside `DAILY`** or the split silently goes stale
 while the charts above it move.
 
-A second live campaign, **India | MBBS Students - influencers** (`120249585873390482`),
-opened on 24 Sep 2026 on its own ₹3,000/day budget alongside the original ₹3,000/day
-campaign. Account spend roughly doubled that day — that is a deliberate second campaign,
-not a budget change on the first. It runs the same three influencer creatives, and so far
-only `Influencer - 11sep` has any real delivery in it.
+**October rebuilt the account, and it is now a one-campaign report.**
+`India | MBBS Students - Doctors | App Downloads | signups` (`120249183882130482`) is the
+only campaign still spending. October took **Rs 2,68,262.50 for 13,301 registrations,
+Rs 20.17 each** - the account's biggest month and its cheapest, against Rs 92,623.77 at
+Rs 33.68 in September and Rs 68.21 in August. Spend stepped up on 4 Oct (Rs 14,846.11 against
+Rs 1,143.27 on the 1st) and held roughly Rs 4,500-13,500 a day thereafter.
 
-**Budgets were cut on 27 Sep 2026 at 7:36 am** — both campaigns went from ₹3,000/day to
-₹1,000/day (activity log, Power Editor, actor Abhijeet Lenka), so the account cap fell
-from ₹6,000/day to ₹2,000/day. **The first day under the cap was the cheapest normal day
-in a fortnight**: 27 Sep settled at ₹1,939.44 for 64 registrations, ₹30.30 each, against
-₹41.74 on the 26th at three times the spend. **28 Sep is not a fair comparison**: it
-spent only ₹709.48 (31 registrations, ₹22.89 each) because delivery thinned all day and
-all but stopped from 3 pm to 9 pm (₹2.74 across those six hours, hourly breakdown). It
-resumed in the 9 pm hour, right after ₹30,000 was added to the prepaid balance at 9:32 pm
-(activity log, "Money added to balance"). Watch the balance: a stall like that looks
-like a cheap day in the tables. At 7:34 am the influencer ad set `120249585873460482`
-also moved from "Automatically bid for actions" to "Optimize bid for actions" with a
-**₹19.00 bid cap**. Anything from 27 Sep onward is a different regime; do not read it
-against the ₹6,000/day days. `influencer - hasaan` was switched off in the main campaign
-at 9:25 pm on 26 Sep and is now PAUSED in `ADS`.
+**Sixteen ads were created in October** - the ten-strong `E3-*` series plus dated influencer
+cuts (`influencer 20oct - Copy`, `influencer 27oct`, `influencer31st oct`, `new influencer 1nov`,
+`influencer - 20oct`). They are **appended to `ANAME` at indexes 8-23**; indexes 0-7 are
+untouched so every historical `ADAY` row still points at the creative that actually ran.
+`E3-08a 3 medical apps to 1` is now the largest creative on the account at Rs 1,26,819.49 for
+6,050 registrations. **No ad was renamed and no creative was swapped in this period** - the
+activity log (`event_category: "ad"`, 29 Sep - 2 Nov) carries only `Ad created` and
+`Ad status updated` events, no `Ad name updated` and no `Ad updated`.
+
+**`v5 - I am a med student` and the Rheumatoid ad are now ARCHIVED**, so they vanish from an
+unfiltered ad listing - see the archived-ads trap below.
+
+**`India | MBBS Students - influencers` (`120249585873390482`) is PAUSED.** It last delivered
+in volume on 30 Sep, trickled to a stop on 3 Oct, and closes at Rs 7,700.08 / 160 registrations.
+Its three ad rows still sum to the campaign total to the paisa.
+
+*History, kept because it explains the shape of September:* the influencer campaign opened on
+24 Sep 2026 on its own Rs 3,000/day alongside the original Rs 3,000/day campaign, which is why
+account spend roughly doubled that day. **Budgets were cut on 27 Sep 2026 at 7:36 am** - both
+campaigns from Rs 3,000/day to Rs 1,000/day (activity log, Power Editor, actor Abhijeet Lenka).
+28 Sep spent only Rs 712.22 because delivery thinned all day and all but stopped from 3 pm to
+9 pm, resuming after Rs 30,000 was added to the prepaid balance at 9:32 pm. At 7:34 am the
+influencer ad set `120249585873460482` also moved to "Optimize bid for actions" with a
+**Rs 19.00 bid cap**. `influencer - hasaan` was switched off in the main campaign at 9:25 pm on
+26 Sep and has not delivered since; it is PAUSED in `ADS`.
 
 The page carries `noindex, nofollow` so it stays out of search results.
 
@@ -100,6 +112,32 @@ split the ad into two rows at the swap date:
 and **append** the new names to `ANAME` while restoring the old names at their
 original indexes — every historical `ADAY` row still points at the creative that
 actually ran.
+
+## Two pull traps that will silently corrupt a refresh
+
+**1. An ad-level daily pull with too many `object_ids` returns zeros, it does not drop rows.**
+On this refresh, `level: "ad"` + `time_increment: "1"` + 25 ad ids over 33 days returned all
+825 rows and every id was present - but **most ads came back with `amount_spent` 0 and
+`impressions` 0**. `E3-09` (Rs 53,243.63), `E3-10` (Rs 30,288.40) and `influencer 20oct - Copy`
+(Rs 49,169.54) all read zero. This is nastier than the row cap in `halcyon-reports`, which drops
+ids you can check for. **Keep each ad-level daily call to ~6 ids (under ~200 ad-days) and
+cross-check every ad's window total against an un-incremented pull of the same window.** That
+cross-check is what caught it.
+
+**2. ARCHIVED ads are omitted from an unfiltered ad listing.** Campaign 5's ad rows came to
+Rs 65,551.01 less than its campaign total until `effective_status IN ["ARCHIVED","DELETED"]`
+was added - `v5 - I am a med student` (Rs 54,351.01), `influencer direct video ad - Rheumatoid
+Arthritis` (Rs 10,460.96), `influencer - 20oct` (Rs 631.34) and `E3-06` (Rs 107.70) were all
+archived. Same trap as `halcyon-reports` has for campaigns. **Always run the archived pull and
+reconcile ad sums against `CAMP` before writing the file.**
+
+**Pull the headline and the daily series close together.** `CAMP`/`ADS`/`AGE` (lifetime) and
+`DAILY`/`ADAY` (per day) are separate reads, and while campaign 5 is spending the part-day moves
+between them - it moved Rs 25.12 in the minutes between two reads on this refresh. Pull the last
+two days of `DAILY` and `ADAY` in the *same* batch: done that way they reconciled exactly on
+spend, impressions, installs and registrations for both 1 and 2 Nov. Residual drift of
+`DAILY`/`AGE` against the `CAMP` header (here +Rs 17.23 and +Rs 7.83) is the live part-day and is
+what the page's own footnote describes.
 
 ## Campaigns not in the report
 
