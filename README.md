@@ -2,7 +2,7 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 September 2026, 11:00 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 5 November 2026, 8:11 am IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
   Defaults to the campaigns that are active; a switch shows all nine.
@@ -47,11 +47,69 @@ That split reads `ADAY`, ad-level day rows for the campaigns that are still runn
 by `ANAME`. **`ADAY` has to be refreshed alongside `DAILY`** or the split silently goes stale
 while the charts above it move.
 
-A second live campaign, **India | MBBS Students - influencers** (`120249585873390482`),
-opened on 24 Sep 2026 on its own ₹3,000/day budget alongside the original ₹3,000/day
-campaign. Account spend roughly doubled that day — that is a deliberate second campaign,
-not a budget change on the first. It runs the same three influencer creatives, and so far
-only `Influencer - 11sep` has any real delivery in it.
+## Snapshot: 5 November 2026 — the account has changed scale
+
+**Lifetime spend has tripled since the last cut and the cost per registration has
+almost halved.**
+
+| | 29 Sep cut | **5 Nov cut** |
+|---|---|---|
+| Media spend | ₹1,61,870.20 | **₹4,56,975.37** |
+| Billed (incl. 18% GST) | ₹1,91,006.84 | **₹5,39,230.94** |
+| Installs | 9,509 | **40,120** · ₹11.39 each |
+| Registrations | 3,741 | **18,509** · **₹24.69** each |
+| Lifetime cost per registration | ₹43.27 | **₹24.69** |
+
+**It is one campaign.** `India | MBBS Students - Doctors | App Downloads | signups`
+(index 5) went from ₹89,451.65 to **₹3,84,414.72** — 84% of all spend the account has
+ever made — and its registrations went 2,720 → **17,474** at **₹22.00** each, down from
+₹32.89. Its daily budget is back at **₹6,000/day**; the ₹1,000/day cut of 27 Sep did not
+hold. It is the only ACTIVE campaign on the account.
+
+**`India | MBBS Students - influencers` (index 8) is now PAUSED** and spent only ₹142.10
+more than at the last cut (₹7,557.98 → ₹7,700.08). The second-campaign experiment is over;
+everything now runs inside campaign 5.
+
+**Sixteen new creatives, and the good ones are the influencer cuts:**
+
+| creative | spend | regs | each |
+|---|---|---|---|
+| `influencer 20oct – Copy` (ACTIVE) | ₹50,629.39 | 3,294 | **₹15.37** |
+| `new influencer 1nov` (ACTIVE) | ₹19,539.38 | 1,169 | **₹16.71** |
+| `E3-08a 3 medical apps to 1` | ₹1,26,819.57 | 6,053 | ₹20.95 |
+| `E3-09 Asking medicos which AI app they trust` | ₹53,243.63 | 2,451 | ₹21.72 |
+| `E3-10 Rounds with the strictest senior` (ACTIVE) | ₹31,011.26 | 1,373 | ₹22.59 |
+| `v5 - I am a med student` (ARCHIVED) | ₹54,351.01 | 1,734 | ₹31.34 |
+| `Influencer - 11sep` | ₹20,817.14 | 569 | ₹36.59 |
+
+`E3-08a` is the biggest single line the account has ever run and it is respectable at
+₹20.95, but **the two influencer cuts beat it by 25–30%** on a fraction of the budget.
+The old `v5 - I am a med student` workhorse is archived at ₹31.34 — it was the most
+expensive large creative by the end.
+
+**The window card reads a 25% improvement and names the cause.** A registration cost
+₹23.26 across 28–31 Oct and **₹17.51 across 1–4 Nov**. Impressions were 15% *dearer* over
+those windows, but each 1,000 of them produced **52% more registrations** — a response
+gain, not a price gain. The mix is the reason: `new influencer 1nov` took **0% of spend in
+the first window and 78% in the second**. The page works all of this out from `ADAY`.
+
+**No rename or creative swap this time.** `ads_account_get_activity_logs`
+(`event_category: "ad"`, since 29 Sep) returns 176 events: 110 status changes, 50 review
+transitions and **16 `Ad created`** — exactly matching the 16 new names — with **zero
+`Ad name updated` and zero `Ad updated`**. Every one of the 16 is a genuinely new ad
+object, so all 16 were **appended** to `ANAME` (8 → 24 entries) and no existing index
+moved.
+
+**The two `REPLACED` rows still reproduce exactly.** A ranged pull to **21 September**
+returns `v4 - Ecg` at ₹10,361.32 / 303,917 / 159,924 and `v1 - male` at ₹1,076.22 /
+23,969 / 16,423 — identical to the published rows, to the paisa. The 21/22 September
+boundary the page documents is the right one; an off-by-one boundary (22/23) moves
+₹6.63 and ₹14.39 between the halves, so **use 21 September, not the detection date of
+the 23rd.**
+
+**One inherited 1-registration gap is closed.** `CAMP[0]` read 184 registrations while its
+`AGE` rows summed to 183. Re-pulling campaign 0's age breakdown shows Meta has since
+late-attributed one registration to its 25–34 band (72 → 73), and the two now agree.
 
 **Budgets were cut on 27 Sep 2026 at 7:36 am** — both campaigns went from ₹3,000/day to
 ₹1,000/day (activity log, Power Editor, actor Abhijeet Lenka), so the account cap fell
