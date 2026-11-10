@@ -2,10 +2,60 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 September 2026, 11:00 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 10 November 2026, 8:50 am IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
-  Defaults to the campaigns that are active; a switch shows all nine.
+  Defaults to the campaigns that are active; a switch shows all ten.
+
+## Where it stands at the 10 Nov 2026 snapshot
+
+Lifetime media spend **₹4,89,532.49** (₹5,77,648.34 billed with GST), 42,774 installs at
+₹11.44 and **19,659 registrations at ₹24.90**. `DAILY` covers 31 Jul – 10 Nov 2026; 10 Nov
+is the part-day.
+
+**The account is six weeks into a far larger regime than the one this report last
+described.** `India | MBBS Students - Doctors | App Downloads | signups` has gone from
+₹89,451.65 to **₹4,10,095.11** and now carries 18,432 registrations at **₹22.25** each,
+against ₹32.89 at the last cut — it spent roughly four times its whole prior life in six
+weeks and got cheaper doing it. It is ACTIVE on ₹4,500/day.
+
+**A new campaign was appended as `CID` index 9**: `Qualified Leads | Campaign`
+(`120250327482630482`), opened 6 Nov 2026 at 4:28 pm IST on its own ₹3,000/day, ACTIVE.
+Four settled days (6–9 Nov) took ₹6,523.04 for 178 registrations, **₹36.65 each** — dearer
+than the main campaign, on four days of data. Account cap is therefore ₹7,500/day.
+
+**`India | MBBS Students - influencers` is now PAUSED** at ₹7,700.08 lifetime; it last
+spent on 3 October. It was one of the two live campaigns at the last snapshot.
+
+**Sixteen creatives were appended to `ANAME`** (indexes 8–23): the `E3-01`…`E3-10` block
+plus `influencer - 20oct`, `influencer 20oct – Copy`, `influencer 27oct`,
+`influencer31st oct` and `new influencer 1nov`. The first eight entries are untouched, so
+every historical `ADAY` row still points at the creative that actually ran. The biggest
+single ad on the account is now **`E3-08a 3 medical apps to 1`** — ₹1,26,819.57, 13,025
+installs, 6,053 registrations at ₹20.95 — which has overtaken `v5 - I am a med student`
+(₹54,351.01, now ARCHIVED). The best cost per registration among the big spenders is
+`influencer 20oct – Copy` at **₹15.99**.
+
+Three drifts, all Meta's own, all deliberately left in the data rather than forced:
+
+- **`AGE` runs slightly ahead of `CAMP` on the two live campaigns** — +₹11.79 and +6
+  installs on the main campaign, +₹8.40 and +1 install on Qualified Leads. Breakdown rows
+  settle on their own schedule; every one of the eight paused campaigns reconciles to the
+  paisa across `CAMP`, `ADS`, `DAILY` and `AGE`.
+- **`ADAY` and `DAILY` disagree by ₹0.06 and ₹0.04 on 9 November**, the day before the
+  snapshot, with every count agreeing exactly. That is Meta still revising inside its ~48h
+  window between a campaign-level read and an ad-level read. The refresh assertion now
+  allows ≤₹0.10 of spend drift on the snapshot day minus one and nothing anywhere else.
+- **Meta revised 22 September up by one registration** on the main campaign after the last
+  snapshot was published. `DAILY` was re-pulled in full and caught it; the carried-over
+  `ADAY` rows had not, so `v5 - I am a med student` on 09-22 was corrected from 26 to 27.
+  Re-pull a day at ad level before assuming a stale `ADAY` row is still right.
+
+**One ad status was wrong in the previous snapshot and is fixed here.**
+`influencer direct video ad - Rheumatoid Arthritis` in the main campaign was carrying the
+synthetic `REPLACED` tag, which the page renders as "Creative replaced 22 Sep". It is the
+*post*-swap half of that split and must carry Meta's real status, which is now `ARCHIVED`.
+Only the pre-swap half (`v4 - Ecg`, and `v1 - male` for the other swap) gets `REPLACED`.
 
 **"The last 10 days"** sits at the top of the all-campaigns view. It rolls `DAILY`
 up across whichever campaigns are in scope and shows spend, impressions, CPM, CTR,
@@ -47,11 +97,11 @@ That split reads `ADAY`, ad-level day rows for the campaigns that are still runn
 by `ANAME`. **`ADAY` has to be refreshed alongside `DAILY`** or the split silently goes stale
 while the charts above it move.
 
-A second live campaign, **India | MBBS Students - influencers** (`120249585873390482`),
-opened on 24 Sep 2026 on its own ₹3,000/day budget alongside the original ₹3,000/day
-campaign. Account spend roughly doubled that day — that is a deliberate second campaign,
-not a budget change on the first. It runs the same three influencer creatives, and so far
-only `Influencer - 11sep` has any real delivery in it.
+**India | MBBS Students - influencers** (`120249585873390482`) opened on 24 Sep 2026 on
+its own ₹3,000/day budget alongside the original ₹3,000/day campaign. Account spend roughly
+doubled that day — that is a deliberate second campaign, not a budget change on the first.
+It runs the same three influencer creatives, only `Influencer - 11sep` ever had real
+delivery in it, and it has been PAUSED since it stopped spending on 3 Oct 2026.
 
 **Budgets were cut on 27 Sep 2026 at 7:36 am** — both campaigns went from ₹3,000/day to
 ₹1,000/day (activity log, Power Editor, actor Abhijeet Lenka), so the account cap fell
@@ -104,6 +154,6 @@ actually ran.
 ## Campaigns not in the report
 
 `India | Influencer Videos | App Registrations` (`120249585723440482`) is on the
-account, PAUSED, and has **never delivered**: Meta returns no spend, impression or
+account, PAUSED, and still has **never delivered** as of 10 Nov 2026: Meta returns no spend, impression or
 result fields for it at all. So it is deliberately left out of `CID` and `CAMP`. Add it
 the day it spends, **appended to the end of `CID`** so no historical row re-labels itself.
