@@ -2,10 +2,10 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 September 2026, 11:00 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 18 November 2026, 11:00 am IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
-  Defaults to the campaigns that are active; a switch shows all nine.
+  Defaults to the campaigns that are active; a switch shows all ten.
 
 **"The last 10 days"** sits at the top of the all-campaigns view. It rolls `DAILY`
 up across whichever campaigns are in scope and shows spend, impressions, CPM, CTR,
@@ -47,26 +47,53 @@ That split reads `ADAY`, ad-level day rows for the campaigns that are still runn
 by `ANAME`. **`ADAY` has to be refreshed alongside `DAILY`** or the split silently goes stale
 while the charts above it move.
 
-A second live campaign, **India | MBBS Students - influencers** (`120249585873390482`),
-opened on 24 Sep 2026 on its own ₹3,000/day budget alongside the original ₹3,000/day
-campaign. Account spend roughly doubled that day — that is a deliberate second campaign,
-not a budget change on the first. It runs the same three influencer creatives, and so far
-only `Influencer - 11sep` has any real delivery in it.
+## Where the account is now (18 Nov 2026)
 
-**Budgets were cut on 27 Sep 2026 at 7:36 am** — both campaigns went from ₹3,000/day to
-₹1,000/day (activity log, Power Editor, actor Abhijeet Lenka), so the account cap fell
-from ₹6,000/day to ₹2,000/day. **The first day under the cap was the cheapest normal day
-in a fortnight**: 27 Sep settled at ₹1,939.44 for 64 registrations, ₹30.30 each, against
-₹41.74 on the 26th at three times the spend. **28 Sep is not a fair comparison**: it
-spent only ₹709.48 (31 registrations, ₹22.89 each) because delivery thinned all day and
-all but stopped from 3 pm to 9 pm (₹2.74 across those six hours, hourly breakdown). It
-resumed in the 9 pm hour, right after ₹30,000 was added to the prepaid balance at 9:32 pm
-(activity log, "Money added to balance"). Watch the balance: a stall like that looks
-like a cheap day in the tables. At 7:34 am the influencer ad set `120249585873460482`
-also moved from "Automatically bid for actions" to "Optimize bid for actions" with a
-**₹19.00 bid cap**. Anything from 27 Sep onward is a different regime; do not read it
-against the ₹6,000/day days. `influencer - hasaan` was switched off in the main campaign
-at 9:25 pm on 26 Sep and is now PAUSED in `ADS`.
+**The account scaled roughly tenfold through October.** Lifetime spend is
+**Rs 5,39,456.05** against Rs 1,54,870 at the September snapshot — 46,568 installs and
+21,370 registrations. Daily account spend went from about Rs 1,100 at the start of
+October to a peak of **Rs 14,846.11 on 4 October**, then settled into the
+Rs 5,000–13,000 range.
+
+`India | MBBS Students - Doctors | App Downloads | signups` (`120249183882130482`,
+index 5) carried almost all of it: **Rs 4,25,428 lifetime**, 40,635 installs, 18,963
+registrations. It ran until **15 November** and is now PAUSED.
+
+**A new campaign is the only one delivering.** `Qualified Leads | Campaign`
+(`120250327482630482`) opened **6 November** and is **appended to `CID` as index 9**, so
+no historical row re-labels itself. It has taken **Rs 41,468 for 2,956 installs and
+1,372 registrations** (Rs 30.22 per registration). It overlapped campaign 5 from the
+6th to the 15th.
+
+**14 November delivered nothing at all** — Rs 0.00 and zero impressions across the whole
+account — while still booking installs and registrations attributed from earlier clicks.
+That is why the day shows results against no cost. It is the same shape as 31 Aug in the
+existing data; worth a glance at the prepaid balance, since the 18 Sep and 28 Sep stalls
+both turned out to be balance-related.
+
+**The creative roster turned over almost completely.** The `E3-` series (`E3-01` …
+`E3-10`) and the dated `influencer` cuts (`influencer - 20oct`, `influencer 20oct – Copy`,
+`influencer 27oct`, `influencer31st oct`, `new influencer 1nov`, `influencer3 nov`,
+`sadaf`) all started in October or November — 18 names appended to `ANAME`. The biggest
+single creative on the account is now `E3-08a 3 medical apps to 1` at Rs 1,26,820.
+`influencer3 nov` is what moved campaign 9's cost per registration: it took 0% of spend
+in the 9–12 Nov window and 90% in 13–17 Nov, and a registration went from Rs 38.08 to
+Rs 24.71 across those windows.
+
+### Historical: the September regime (kept for the day rows before 30 Sep)
+
+A second campaign, **India | MBBS Students - influencers** (`120249585873390482`),
+opened on 24 Sep 2026 on its own Rs 3,000/day budget alongside the original Rs 3,000/day
+campaign. It stopped spending on **3 Oct** and is now PAUSED at Rs 7,700.08.
+
+**Budgets were cut on 27 Sep 2026 at 7:36 am** — both campaigns went from Rs 3,000/day
+to Rs 1,000/day, so the account cap fell from Rs 6,000/day to Rs 2,000/day. 27 Sep
+settled at Rs 1,939.44 for 64 registrations, Rs 30.30 each, against Rs 41.74 on the 26th
+at three times the spend. 28 Sep spent only Rs 709.48 because delivery thinned all day
+and all but stopped from 3 pm to 9 pm, resuming right after Rs 30,000 was added to the
+prepaid balance at 9:32 pm. A stall like that looks like a cheap day in the tables.
+`influencer - hasaan` was switched off in the main campaign at 9:25 pm on 26 Sep. That
+whole regime was superseded by the October scale-up; do not read October against it.
 
 The page carries `noindex, nofollow` so it stays out of search results.
 
@@ -101,9 +128,43 @@ and **append** the new names to `ANAME` while restoring the old names at their
 original indexes — every historical `ADAY` row still points at the creative that
 actually ran.
 
+## An ARCHIVED ad disappears from an ordinary ad listing
+
+**This bit the report on 18 Nov 2026.** Four ads in campaign 5 — including
+`v5 - I am a med student` at **Rs 54,351.01**, the account's second-biggest creative at
+the time — had been **archived**, and a plain `level: "ad"` listing simply did not
+return them. Nothing errored. `v5`, `influencer direct video ad - Rheumatoid Arthritis`,
+`influencer - 20oct` and `E3-06 My entire AI stack` were all missing, about **Rs 65,500**
+of ad-level spend, and the first guess looked like the 23 Sep rename trap: a familiar
+name gone from the ad rows.
+
+It was not a rename. **Always pass an `effective_status` filter that includes
+`ARCHIVED` and `DELETED`** at ad level, exactly as `halcyon-reports` already does at
+campaign level:
+
+    filtering: [{"field":"effective_status","operator":"IN",
+                 "value":["ACTIVE","PAUSED","ARCHIVED","DELETED","CAMPAIGN_PAUSED",
+                          "ADSET_PAUSED","AD_PAUSED","DISAPPROVED","WITH_ISSUES",
+                          "IN_PROCESS","PENDING_REVIEW","PREAPPROVED",
+                          "PENDING_BILLING_INFO"]}]
+
+The tell that it is archiving and not a rename: with archived ads included, every
+campaign's ad rows sum back to its `CAMP` total exactly, and no new name is carrying a
+disappeared ad's history. Check that before concluding anything about a rename.
+
+**How to tell the two apart, in order:**
+
+1. Pull ad level with the archived/deleted statuses included. If the missing name comes
+   back, it was archived — keep its row, nothing is renamed.
+2. If it does not come back, pull ad level with a `time_range` ending at the previous
+   snapshot date. A renamed ad returns its **old figures under its new name**, which
+   identifies the pair unambiguously.
+3. Only then go to `ads_account_get_activity_logs` to see whether the creative changed
+   too.
+
 ## Campaigns not in the report
 
-`India | Influencer Videos | App Registrations` (`120249585723440482`) is on the
+`India | Influencer Videos | App Registrations` (`120249585723440482`) is still on the
 account, PAUSED, and has **never delivered**: Meta returns no spend, impression or
 result fields for it at all. So it is deliberately left out of `CID` and `CAMP`. Add it
 the day it spends, **appended to the end of `CID`** so no historical row re-labels itself.
