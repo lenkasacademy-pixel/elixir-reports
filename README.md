@@ -2,10 +2,19 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 September 2026, 11:00 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 19 November 2026, 9:15 am IST.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
-  Defaults to the campaigns that are active; a switch shows all nine.
+  Defaults to the campaigns that are active; a switch shows all ten.
+
+**The lifetime layers stop at the end of `SNAP_DAY - 1`.** `CAMP`, `ADS` and `AGE` are pulled
+with `time_range` ending the day before `SNAP_DAY`, not `date_preset: "maximum"`. While a
+campaign is live its lifetime total moves between one call and the next — on this refresh
+campaign 9's figure read ₹48,573.16, then ₹48,573.29, then ₹48,573.49 across three calls
+minutes apart, because Meta was still revising 18 November. Pull the three lifetime layers
+against a closed window and they agree with each other to the paisa; pull them against
+`maximum` and they never will. `DAILY` and `ADAY` still carry `SNAP_DAY` as the part-day row,
+which is the only place the live day appears.
 
 **"The last 10 days"** sits at the top of the all-campaigns view. It rolls `DAILY`
 up across whichever campaigns are in scope and shows spend, impressions, CPM, CTR,
@@ -46,6 +55,30 @@ problem, *response fading* is the one a new creative fixes.
 That split reads `ADAY`, ad-level day rows for the campaigns that are still running, indexed
 by `ANAME`. **`ADAY` has to be refreshed alongside `DAILY`** or the split silently goes stale
 while the charts above it move.
+
+## What changed between 29 Sep and 19 Nov 2026
+
+**The account scaled about twelvefold and then handed over to a new campaign.**
+`India | MBBS Students - Doctors | App Downloads | signups` went from ₹1,000 a day to
+₹8,000 on 3 Oct at 11:07 am and ₹12,000 on 4 Oct at 12:10 pm, back to ₹6,000 on 20 Oct,
+₹4,500 on 9 Nov and ₹3,500 on 10 Nov (activity log, actor Abhijeet Lenka). It stopped
+delivering after 15 Nov and is paused. **`Qualified Leads | Campaign`
+(`120250327482630482`) is campaign index 9**, appended to the end of `CID`; it first
+delivered on 6 Nov and is the only ACTIVE campaign, climbing ₹2,000 → ₹8,000 a day
+between 6 and 18 Nov. Eleven E3-xx creatives were built on 3 Oct at 11:58 am through the
+ads MCP server and seven more have been added since; `ANAME` grew from 8 names to 26,
+every original index left where it was.
+
+**14 Nov 2026 is a zero-delivery day that still books results.** The account spent nothing
+and served no impressions, yet 13 installs and 31 registrations landed against clicks from
+earlier days. Keep the row: drop it and the month no longer sums to the sum of its days.
+`per()` now returns an em dash rather than `₹0.00` when spend is zero and the count is not,
+because "₹0.00 per install" reads as free and it is not a cost at all.
+
+**No ad was renamed or re-creatived between 28 Sep and 19 Nov** — checked in
+`ads_account_get_activity_logs` (`event_category: "ad"`, three windows to get under the
+per-call cap). Only status changes and new-ad creations. The two 22 Sep splits below are
+unchanged.
 
 A second live campaign, **India | MBBS Students - influencers** (`120249585873390482`),
 opened on 24 Sep 2026 on its own ₹3,000/day budget alongside the original ₹3,000/day
@@ -107,3 +140,24 @@ actually ran.
 account, PAUSED, and has **never delivered**: Meta returns no spend, impression or
 result fields for it at all. So it is deliberately left out of `CID` and `CAMP`. Add it
 the day it spends, **appended to the end of `CID`** so no historical row re-labels itself.
+This is how `Qualified Leads | Campaign` joined on 19 Nov 2026, as index 9.
+
+## Two pulls that silently come back short
+
+Both of these cost a reconciliation failure on the 19 Nov 2026 refresh.
+
+**ARCHIVED and DELETED ads are missing from an unfiltered ad listing, but their spend
+stays in the campaign total.** Campaign 5's ads summed ₹359,876.73 against its own
+₹425,427.74 — ₹65,551.01 short, all of it in four archived ads
+(`v5 - I am a med student` ₹54,351.01, the Rheumatoid Arthritis ad ₹10,460.96,
+`influencer - 20oct` ₹631.34, `E3-06 My entire AI stack` ₹107.70). Always pass
+`effective_status IN [... "ARCHIVED", "DELETED" ...]` on every ad-level and
+campaign-level pull. The same applies to the `age` breakdown: a `limit` that looks
+generous is counted in rows, and campaign 9 lost its `65+` band (₹450.45) that way.
+
+**A wide ad-level `time_increment: 1` pull is truncated without saying so.** Two 30-day
+windows over three campaigns returned 396 of the 488 rows that exist — 4 Oct came back as
+₹257.97 against the ₹14,846.11 the day really took. There is no `next_cursor` and no
+error. **Pull `ADAY` in windows of about eight days** and reconcile each window against
+`DAILY` before merging; eight such windows returned all 488 rows and every one of the
+61 days then matched `DAILY` exactly on spend, impressions, installs and registrations.
