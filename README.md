@@ -2,7 +2,9 @@
 
 Client-facing performance reports for Elixir Social's Meta ads (account 1358051173168970).
 
-- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 29 September 2026, 11:00 am IST.
+- `index.html` — **Creative Ledger**, a lifetime creative-wise report snapshotted 26 November 2026, 8:15 am IST.
+  Lifetime arrays (`CAMP`, `ADS`, `AGE`) count **settled days only, to 25 November**; `DAILY` carries 26 November
+  as a part-day and `SNAP_DAY` keeps it out of every total.
   Self-contained: the figures are baked into the file, so it needs no network and no connector.
   Campaign rail, per-ad tables, day-by-day, age bands, and the GST-inclusive billing line.
   Defaults to the campaigns that are active; a switch shows all nine.
@@ -47,26 +49,51 @@ That split reads `ADAY`, ad-level day rows for the campaigns that are still runn
 by `ANAME`. **`ADAY` has to be refreshed alongside `DAILY`** or the split silently goes stale
 while the charts above it move.
 
-A second live campaign, **India | MBBS Students - influencers** (`120249585873390482`),
-opened on 24 Sep 2026 on its own ₹3,000/day budget alongside the original ₹3,000/day
-campaign. Account spend roughly doubled that day — that is a deliberate second campaign,
-not a budget change on the first. It runs the same three influencer creatives, and so far
-only `Influencer - 11sep` has any real delivery in it.
+## Where the account stands (26 Nov 2026)
 
-**Budgets were cut on 27 Sep 2026 at 7:36 am** — both campaigns went from ₹3,000/day to
-₹1,000/day (activity log, Power Editor, actor Abhijeet Lenka), so the account cap fell
-from ₹6,000/day to ₹2,000/day. **The first day under the cap was the cheapest normal day
-in a fortnight**: 27 Sep settled at ₹1,939.44 for 64 registrations, ₹30.30 each, against
-₹41.74 on the 26th at three times the spend. **28 Sep is not a fair comparison**: it
-spent only ₹709.48 (31 registrations, ₹22.89 each) because delivery thinned all day and
-all but stopped from 3 pm to 9 pm (₹2.74 across those six hours, hourly breakdown). It
-resumed in the 9 pm hour, right after ₹30,000 was added to the prepaid balance at 9:32 pm
-(activity log, "Money added to balance"). Watch the balance: a stall like that looks
-like a cheap day in the tables. At 7:34 am the influencer ad set `120249585873460482`
-also moved from "Automatically bid for actions" to "Optimize bid for actions" with a
-**₹19.00 bid cap**. Anything from 27 Sep onward is a different regime; do not read it
-against the ₹6,000/day days. `influencer - hasaan` was switched off in the main campaign
-at 9:25 pm on 26 Sep and is now PAUSED in `ADS`.
+**The account scaled about 3.7x since the September cut.** Lifetime settled spend is
+**₹5,96,737.17** (₹7,04,149.86 billed with 18% GST) against ₹1,61,870.20 at the
+29 September snapshot, on **50,031 installs** and **23,082 registrations**. Cost per
+registration fell from ₹43.27 to **₹25.85** — the account got much bigger and
+materially cheaper at the same time.
+
+**`India | MBBS Students - Doctors | App Downloads | signups` carried almost all of it**
+and is now PAUSED. It took ₹4,25,428 of the lifetime total — 71% of everything the
+account has ever spent — for 18,968 registrations at **₹22.43**. Its last delivery was
+15 November; late-attributed conversions trickle in to 19 November.
+
+**Three `Qualified Leads` campaigns opened in November** and are the only ACTIVE ones:
+
+| Campaign | from | spend | regs | per reg |
+|---|---|---|---|---|
+| `Qualified Leads \| Campaign` | 6 Nov | ₹93,223.44 | 2,959 | **₹31.51** |
+| `Qualified Leads \| cost cap 30` | 23 Nov | ₹3,225.75 | 105 | ₹30.72 |
+| `Qualified Leads \|instagram reel` | 21 Nov | ₹2,299.59 | 15 | **₹153.31** |
+
+The `instagram reel` test is five times the cost per registration of everything else on
+the account. Four days and ₹2,300 is far too little to call, but it is the one to watch.
+`cost cap 30` is holding at ₹30.72 on four days.
+
+**14 November served nothing** — zero spend and zero impressions account-wide — though
+installs and registrations were still attributed to that date from earlier clicks.
+
+**The part-day moves while you read it.** Building this refresh, the account's
+26 November total went from ₹388.77 to ₹425.52 between two calls minutes apart. That is
+why every lifetime array here stops at 25 November and `SNAP_DAY` exists.
+
+## Archived ads are missing from an unfiltered ad listing
+
+**This is the same trap as archived campaigns, one level down, and it cost ₹65,551 of
+campaign 5's spend on this refresh.** An ad-level pull without an `effective_status`
+filter returned 18 ads for `India | MBBS Students - Doctors | App Downloads | signups`
+summing to ₹3,59,877 against a campaign total of ₹4,25,428. The missing ₹65,551 was in
+five ARCHIVED ads — including **`v5 - I am a med student` at ₹54,351**, the top creative
+at the September cut.
+
+Filter `effective_status IN ["ACTIVE","PAUSED","ARCHIVED","DELETED","CAMPAIGN_PAUSED",
+"ADSET_PAUSED", ...]` on **ad-level** pulls as well as campaign-level ones. The
+reconciliation (ADS sums == CAMP totals) is what catches it; without that check the
+creative tables would simply have been missing the account's best-known ad.
 
 The page carries `noindex, nofollow` so it stays out of search results.
 
@@ -74,6 +101,14 @@ A live version of the same report — one that queries Meta each time it is open
 as a private Claude artifact rather than here.
 
 ## A rename can hide a creative swap — check the activity log
+
+**On the 26 Nov 2026 refresh no new swap was found.** Both historical splits were
+re-verified and still reconcile to the paisa against their ad's own lifetime:
+`v4 - Ecg` ₹10,361.32 + `influencer direct video ad - Rheumatoid Arthritis` ₹99.64 =
+₹10,460.96, and `v1 - male` ₹1,076.22 + `influencer - hasaan` ₹413.03 = ₹1,489.25.
+The retired-creative rows have not moved since they were first published. The method
+below is what produced that check — a dated ad-level pull as at the previous snapshot,
+matched against the published `ADS` rows.
 
 **This bit the report on 23 Sep 2026.** Two ads were renamed at Meta and the
 refresh carried their whole history forward under the new names. It was not a
